@@ -2,11 +2,11 @@ package com.example.shopfood.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF3D5F90)
+val primaryLight = Color(0xFFFF7622)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFD5E3FF)
-val onPrimaryContainerLight = Color(0xFF001C3B)
-val secondaryLight = Color(0xFF555F71)
+val onPrimaryContainerLight = Color(0xFFFF7622)
+val secondaryLight = Color(0xFFFFE1CE)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFFD9E3F8)
 val onSecondaryContainerLight = Color(0xFF121C2B)

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Shopfood</string>
+    <string name="title_introduction_1">ALL your favorites</string>
+    <string name="description_introduction_1">Get all your loved foods in one once place, you just place the orer we do the rest</string>
+    <string name="title_introduction_2">Order from choosen chef</string>
+    <string name="description_introduction_2">Get all your loved foods in one once place, you just place the orer we do the rest</string>
+    <string name="title_introduction_3">Free delivery offers</string>
+    <string name="description_introduction_3">Get all your loved foods in one once place, you just place the orer we do the rest</string>
+    <string name="skip">Skip</string>
+    <string name="btn_next">NEXT</string>
+    <string name="btn_get_started">GET STARTED</string>
 </resources>
