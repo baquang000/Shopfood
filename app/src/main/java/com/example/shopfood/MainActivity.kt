@@ -1,13 +1,17 @@
 package com.example.shopfood
 
-import com.example.shopfood.presentation.navigation.nav_graph.RootNavGraph
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
+import com.example.shopfood.presentation.auth.CustomSplashScreen
+import com.example.shopfood.presentation.navigation.nav_graph.RootNavGraph
 import com.example.shopfood.ui.theme.ShopfoodTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,14 +19,24 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             ShopfoodTheme {
-                AppNav()
+                var showSplash by remember { mutableStateOf(true) }
+
+                if (showSplash) {
+                    CustomSplashScreen {
+                        showSplash = false
+                    }
+                } else {
+                    AppNav()
+                }
             }
+
         }
     }
 }
+
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
