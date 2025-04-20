@@ -34,8 +34,11 @@ import com.example.shopfood.presentation.component.TextFieldCustom
 import com.example.shopfood.ui.theme.ShopfoodTheme
 
 @Composable
-fun SignInScreen() {
+fun SignInScreen(
+    onLogin: () -> Unit = {}
+) {
     ScaffoldWithIconInTopBar(
+        onBackClick = onLogin,
         content = { paddingValue ->
             Column(
                 modifier = Modifier

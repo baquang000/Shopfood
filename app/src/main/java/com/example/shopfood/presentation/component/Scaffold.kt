@@ -28,7 +28,7 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 @Composable
 fun ScaffoldWithNoSafeArea(
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         topBar = topBar,
@@ -39,11 +39,12 @@ fun ScaffoldWithNoSafeArea(
 
 @Composable
 fun ScaffoldWithIconInTopBar(
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
+    onBackClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
-            SimpleTopBarWithBackIcon(onBackClick = {})
+            SimpleTopBarWithBackIcon(onBackClick = onBackClick)
         },
         contentWindowInsets = WindowInsets(0.dp),
         content = content

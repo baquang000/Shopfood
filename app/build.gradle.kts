@@ -62,5 +62,10 @@ dependencies {
     //font
     implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
 
+    //icons
     implementation ("androidx.compose.material:material-icons-extended:1.7.8")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.8.9")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
 }

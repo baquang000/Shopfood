@@ -46,7 +46,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IntroductionScreen() {
+fun IntroductionScreen(
+    onSkip: () -> Unit = {},
+) {
     val scope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { tabContents.size })
     val configuration = LocalConfiguration.current
@@ -145,11 +147,25 @@ fun IntroductionScreen() {
                 ButtonCustom(
                     modifier = Modifier,
                     text = if (pagerState.currentPage == 2) R.string.btn_get_started else R.string.btn_next,
-                    onClick = {}
+                    onClick = {
+                        scope.launch {
+                            if (pagerState.currentPage < tabContents.lastIndex) {
+                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                            } else {
+                                onSkip()
+                            }
+                        }
+
+                    }
                 )
 
                 TextCustom(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .clickable {
+                            onSkip()
+                        },
                     text = R.string.skip,
                 )
 

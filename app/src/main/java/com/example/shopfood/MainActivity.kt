@@ -1,10 +1,13 @@
 package com.example.shopfood
 
+import com.example.shopfood.presentation.navigation.nav_graph.RootNavGraph
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.example.shopfood.presentation.auth.LoginScreen
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.rememberNavController
 import com.example.shopfood.ui.theme.ShopfoodTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,9 +16,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ShopfoodTheme {
-                LoginScreen()
+                AppNav()
             }
         }
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun AppNav() {
+    val navController = rememberNavController()
+    RootNavGraph(navController)
+}

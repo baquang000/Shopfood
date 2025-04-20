@@ -2,6 +2,7 @@ package com.example.shopfood.presentation.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,10 @@ import com.example.shopfood.presentation.component.TextFieldCustom
 import com.example.shopfood.ui.theme.ShopfoodTheme
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onLoginSuccess: () -> Unit,
+    onSignUp: () -> Unit
+) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     ScaffoldWithNoSafeArea(
@@ -72,7 +76,9 @@ fun LoginScreen() {
                         .padding(top = 8.dp, bottom = 48.dp)
                 )
                 SessionLoginTwo(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    onSignUp = onSignUp,
+                    onLoginSuccess = onLoginSuccess
                 )
             }
         }
@@ -81,7 +87,9 @@ fun LoginScreen() {
 
 @Composable
 fun SessionLoginTwo(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSignUp: () -> Unit,
+    onLoginSuccess: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -179,6 +187,7 @@ fun SessionLoginTwo(
             }
             ButtonCustom(
                 text = R.string.login_title,
+                onClick = onLoginSuccess
             )
 
             Row(
@@ -200,6 +209,7 @@ fun SessionLoginTwo(
                     text = R.string.sign_up,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable { onSignUp() }
                 )
             }
             TextCustom(
@@ -241,13 +251,11 @@ fun SessionLoginTwo(
 }
 
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     ShopfoodTheme {
-        LoginScreen()
+        LoginScreen(onLoginSuccess = {}, onSignUp = {})
     }
 }
