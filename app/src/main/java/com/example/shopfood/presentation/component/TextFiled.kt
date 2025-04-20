@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,7 +21,8 @@ fun TextFieldCustom(
     label: String = "",
     placeholder: String = "",
     isSingleLine: Boolean = true,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: @Composable (() -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     OutlinedTextField(
         value = value,
@@ -58,6 +60,7 @@ fun TextFieldCustom(
         ),
         trailingIcon = trailingIcon?.let { icon ->
             { icon() }
-        }
+        },
+        visualTransformation = visualTransformation
     )
 }
