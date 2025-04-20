@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 fun ButtonCustom(
     modifier: Modifier = Modifier,
     @StringRes text: Int,
+    enabled: Boolean = true,
     onClick: () -> Unit = {}
 ) {
     Button(
@@ -30,7 +31,8 @@ fun ButtonCustom(
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             stringResource(text),

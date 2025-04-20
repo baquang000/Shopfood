@@ -61,6 +61,7 @@ fun IntroductionScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
+                    .background(color = MaterialTheme.colorScheme.surface)
             ) {
                 HorizontalPager(
                     state = pagerState,
@@ -79,7 +80,7 @@ fun IntroductionScreen(
                                 .fillMaxWidth()
                                 .height(screenHeight * 0.6f)
                                 .background(
-                                    color = MaterialTheme.colorScheme.surfaceContainerLowest
+                                    color = MaterialTheme.colorScheme.surface
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
