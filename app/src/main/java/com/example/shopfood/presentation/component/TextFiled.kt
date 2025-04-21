@@ -3,6 +3,10 @@ package com.example.shopfood.presentation.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -62,5 +66,54 @@ fun TextFieldCustom(
             { icon() }
         },
         visualTransformation = visualTransformation
+    )
+}
+
+@Composable
+fun TextFieldCustomWithSearch(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth(),
+        placeholder = {
+            Text(
+                text = "Search dishes, restaurants",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.outline
+                )
+            )
+        },
+        singleLine = true,
+        shape = RoundedCornerShape(8.dp),
+        textStyle = MaterialTheme.typography.bodyMedium,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            cursorColor = MaterialTheme.colorScheme.outline,
+            disabledBorderColor = Color.Transparent,
+            unfocusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
+            focusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
+            disabledContainerColor = MaterialTheme.colorScheme.outlineVariant,
+            focusedTextColor = MaterialTheme.colorScheme.outline,
+            unfocusedTextColor = MaterialTheme.colorScheme.outline,
+            disabledTextColor = MaterialTheme.colorScheme.outline
+        ),
+        trailingIcon = {
+            if (value.isNotBlank()) {
+                Icon(
+                    Icons.Filled.Close, ""
+                )
+            } else null
+        },
+        leadingIcon = {
+            Icon(
+                Icons.Filled.Search, ""
+            )
+        }
     )
 }

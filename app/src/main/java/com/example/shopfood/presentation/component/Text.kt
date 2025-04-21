@@ -29,3 +29,22 @@ fun TextCustom(
         textAlign = textAlign
     )
 }
+
+@Composable
+fun TextCustomInputText(
+    modifier: Modifier = Modifier,
+    text: String,
+    style: TextStyle = MaterialTheme.typography.bodyLarge,
+    color: Color = MaterialTheme.colorScheme.outline,
+    textAlign: TextAlign = TextAlign.Center
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = style.copy(
+            color = color,
+            fontWeight = FontWeight.W600
+        ),
+        textAlign = textAlign
+    )
+}

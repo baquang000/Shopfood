@@ -21,5 +21,15 @@
     <string name="sign_up_description">Please sign up to get started</string>
     <string name="name">NAME</string>
     <string name="re_type_password">RE-TYPE PASSWORD</string>
-    <string name="Password_not_match">"Password not match"</string>
+    <string name="Password_not_match">Password not match</string>
+    <string name="Delivery_to">DELIVERY TO</string>
+    <string name="All_Category">All Categories</string>
+    <string name="See_all">See All</string>
+    <string name="all">All</string>
+    <string name="burger">Burger</string>
+    <string name="drink">Drink</string>
+    <string name="hot_dog">Hot dog</string>
+    <string name="pizza">Pizza</string>
+    <string name="steak">Steak</string>
+    <string name="sushi">Sushi</string>
 </resources>
