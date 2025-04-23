@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shopfood.R
 import com.example.shopfood.presentation.component.CategoryCard
+import com.example.shopfood.presentation.component.RestaurantCard
 import com.example.shopfood.presentation.component.ScaffoldWithNoSafeArea
 import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextCustomInputText
@@ -82,6 +83,9 @@ fun HomeScreen() {
             }
             item {
                 ListCategory()
+            }
+            item {
+                SectionRestaurant()
             }
         }
     }
@@ -290,8 +294,37 @@ fun ListCategory(onCategoryClick: (Category) -> Unit = {}) {
     }
 }
 
-
-
+@Composable
+fun SectionRestaurant(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextCustom(
+                text = R.string.open_restaurant
+            )
+            Row {
+                TextCustom(
+                    text = R.string.See_all
+                )
+                Icon(
+                    Icons.Default.ChevronRight,
+                    "",
+                    tint = MaterialTheme.colorScheme.outline
+                )
+            }
+        }
+        RestaurantCard {}
+    }
+}
 
 
 data class Category(
