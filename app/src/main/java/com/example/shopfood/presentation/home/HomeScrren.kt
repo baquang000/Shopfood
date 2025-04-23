@@ -139,42 +139,7 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
                     )
                 }
             }
-            Box(
-                modifier = Modifier
-                    .padding(start = 36.dp)
-                    .size(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ShoppingBag,
-                    contentDescription = "Shopping",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 4.dp, y = (-4).dp)
-                        .size(24.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "3", // ví dụ có 3 sản phẩm
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
+            CardWithNumber()
         }
         Row(
             modifier = Modifier.padding(vertical = 8.dp)
@@ -326,6 +291,46 @@ fun SectionRestaurant(
     }
 }
 
+@Composable
+fun CardWithNumber(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .padding(start = 36.dp)
+            .size(48.dp)
+            .background(
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.ShoppingBag,
+            contentDescription = "Shopping",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 4.dp, y = (-4).dp)
+                .size(24.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = CircleShape
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "3", // ví dụ có 3 sản phẩm
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
 
 data class Category(
     val imageRes: Int,
@@ -365,7 +370,7 @@ val CategoryList = listOf(
 
 @Preview(showBackground = true)
 @Composable
-fun SignInScreenPreview() {
+fun HomeScreenPreview() {
     ShopfoodTheme {
         HomeScreen()
     }

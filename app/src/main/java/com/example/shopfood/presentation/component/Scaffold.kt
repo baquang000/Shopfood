@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -40,11 +41,11 @@ fun ScaffoldWithNoSafeArea(
 @Composable
 fun ScaffoldWithIconInTopBar(
     content: @Composable (PaddingValues) -> Unit,
-    onBackClick: () -> Unit
+    topBar: @Composable () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            SimpleTopBarWithBackIcon(onBackClick = onBackClick)
+            topBar()
         },
         contentWindowInsets = WindowInsets(0.dp),
         content = content
@@ -84,6 +85,50 @@ fun SimpleTopBarWithBackIcon(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBarWithTextAndTwoIcons(
+    modifier: Modifier = Modifier,
+    title: String,
+    onBackClick: () -> Unit,
+    secondIcon: @Composable () -> Unit
+) {
+    TopAppBar(
+        title = {
+            Text(
+                title,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            )
+        },
+        navigationIcon = {
+            Box(
+                modifier = Modifier
+                    .padding(start = 12.dp, top = 24.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onSecondary)
+                    .clickable(onClick = onBackClick),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.background,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        },
+        actions = {
+            secondIcon()
+        },
+        modifier = modifier.fillMaxWidth(),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)

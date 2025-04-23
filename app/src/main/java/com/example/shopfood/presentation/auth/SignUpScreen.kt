@@ -41,6 +41,7 @@ import com.example.shopfood.domain.usecase.firebase.auth.LoginUseCase
 import com.example.shopfood.domain.usecase.firebase.auth.SignupUseCase
 import com.example.shopfood.presentation.component.ButtonCustom
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
+import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
 import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextFieldCustom
 import com.example.shopfood.presentation.viewmodel.auth.SignUpViewModel
@@ -53,7 +54,9 @@ fun SignUpScreen(
     onLogin: () -> Unit = {}
 ) {
     ScaffoldWithIconInTopBar(
-        onBackClick = onLogin,
+        topBar = {
+            SimpleTopBarWithBackIcon(onBackClick = onLogin)
+        },
         content = { paddingValue ->
             Box(
                 modifier = Modifier.fillMaxSize(),

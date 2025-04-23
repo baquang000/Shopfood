@@ -1,6 +1,7 @@
 package com.example.shopfood.presentation.component
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -184,6 +185,29 @@ fun IconWithText(
     }
 }
 
+@Composable
+fun CardRecentKeyWord() {
+    Card(
+        shape = RoundedCornerShape(40.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
+    ) {
+        TextCustomInputText(
+            text = "Burger",
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.Normal
+            )
+        )
+    }
+}
+
+
 @Preview(
     showSystemUi = true,
     showBackground = true
@@ -197,9 +221,7 @@ fun CategoryCardPreview() {
                 .background(color = MaterialTheme.colorScheme.surface),
             verticalArrangement = Arrangement.Center
         ) {
-            RestaurantCard {
-                println("click")
-            }
+            CardRecentKeyWord()
         }
 
     }
