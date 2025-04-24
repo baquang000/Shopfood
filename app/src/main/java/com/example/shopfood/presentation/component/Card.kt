@@ -1,6 +1,5 @@
 package com.example.shopfood.presentation.component
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,11 +22,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,43 +39,36 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 fun CategoryCard(
     modifier: Modifier = Modifier,
     category: Category,
-    isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val scale by animateFloatAsState(targetValue = if (isSelected) 1.05f else 1f)
-    val backgroundColor =
-        if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-
     Card(
         shape = RoundedCornerShape(40.dp),
         colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
+            containerColor = MaterialTheme.colorScheme.surface
         ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
             .padding(end = 8.dp)
-            .width(if (isSelected) 155.dp else 150.dp) // tăng chiều rộng
-            .height(if (isSelected) 65.dp else 60.dp)
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-                shadowElevation = if (isSelected) 12.dp.toPx() else 4.dp.toPx()
-                shape = RoundedCornerShape(40.dp)
-                clip = true
-            }
-            .clickable { onClick() }
+            .height(60.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
+                .clip(
+                    shape = RoundedCornerShape(40.dp)
+                )
+                .clickable(
+                    onClick = onClick
+                )
                 .padding(horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Box(
                 modifier = Modifier
-                    .size(if (isSelected) 48.dp else 36.dp) // tăng size
+                    .size(48.dp)
                     .background(
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.2f),
                         shape = CircleShape
                     ),
                 contentAlignment = Alignment.Center
@@ -86,10 +76,11 @@ fun CategoryCard(
                 Image(
                     painter = painterResource(id = category.imageRes),
                     contentDescription = null,
-                    modifier = Modifier.size(if (isSelected) 36.dp else 24.dp) // icon cũng lớn hơn
+                    modifier = Modifier.size(36.dp)
                 )
             }
             TextCustom(
+                modifier = Modifier.padding(horizontal = 12.dp),
                 text = category.title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSecondaryContainer

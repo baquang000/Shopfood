@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
@@ -51,6 +52,9 @@ import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextCustomInputText
 import com.example.shopfood.presentation.component.TextFieldCustomWithSearch
 import com.example.shopfood.ui.theme.ShopfoodTheme
+import com.example.shopfood.ui.theme.grayCustomLight
+import com.example.shopfood.ui.theme.textColorGrayLight
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -102,41 +106,51 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(Icons.Filled.Apps, "")
-            }
-            Column {
-                TextCustom(
-                    text = R.string.Delivery_to,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Row {
-                    Text(
-                        "40 Nguyễn Văn Linh, Quận 7, TP.HCM",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+            Row {
+                Box(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .size(48.dp)
+                        .background(
+                            color = grayCustomLight,
+                            shape = CircleShape
                         ),
-                        maxLines = 1,
-                        modifier = Modifier.width(200.dp),
-                        overflow = TextOverflow.Ellipsis
-                    )
+                    contentAlignment = Alignment.Center
+                ) {
                     Icon(
-                        Icons.Filled.ArrowDropDown,
-                        "",
+                        Icons.Filled.Apps, "",
                         tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
+                }
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    TextCustom(
+                        text = R.string.Delivery_to,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Row {
+                        Text(
+                            "40 Nguyễn Văn Linh, Quận 7, TP.HCM",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            maxLines = 1,
+                            modifier = Modifier.width(150.dp),
+                            overflow = TextOverflow.Ellipsis
+                        )
+                        Icon(
+                            Icons.Filled.ArrowDropDown,
+                            "",
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    }
                 }
             }
             CardWithNumber()
@@ -146,11 +160,17 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
         ) {
             TextCustomInputText(
                 text = "Hey Halal,",
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = textColorGrayLight,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Normal
+                ),
             )
             TextCustomInputText(
                 text = "Good Afternoon",
                 color = MaterialTheme.colorScheme.onSecondaryContainer,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
                 modifier = Modifier.padding(start = 2.dp)
             )
         }
@@ -172,11 +192,19 @@ fun SectionHomeWithCategory(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextCustom(
-                text = R.string.All_Category
+                text = R.string.All_Category,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = textColorGrayLight
             )
             Row {
                 TextCustom(
-                    text = R.string.See_all
+                    text = R.string.See_all,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    color = textColorGrayLight
                 )
                 Icon(
                     Icons.Default.ChevronRight,
@@ -190,70 +218,15 @@ fun SectionHomeWithCategory(
 
 @Composable
 fun ListCategory(onCategoryClick: (Category) -> Unit = {}) {
-    val listState = rememberLazyListState()
-    val selectedIndex = remember { mutableStateOf(0) }      // Để highlight
-    val clickedIndex = remember { mutableStateOf<Int?>(null) } // Xử lý riêng sau click
-    val coroutineScope = rememberCoroutineScope()
-    var cardSize by remember { mutableIntStateOf(0) }
-
-    // Lắng nghe scroll tự động chọn item
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo }
-            .map { layoutInfo ->
-                val visibleItems = layoutInfo.visibleItemsInfo
-                if (visibleItems.isEmpty()) return@map selectedIndex.value
-
-                val totalItems = layoutInfo.totalItemsCount
-                val viewportStart = layoutInfo.viewportStartOffset
-                val viewportEnd = viewportStart + layoutInfo.viewportSize.width
-
-                val firstItem = visibleItems.first()
-                val lastItem = visibleItems.last()
-
-                // Nếu cuộn sát đầu
-                if (listState.firstVisibleItemIndex == 0 && firstItem.offset >= -10) return@map 0
-
-                // Nếu cuộn sát cuối
-                if (lastItem.index == totalItems - 1 &&
-                    (lastItem.offset + lastItem.size) <= (viewportEnd + 10)
-                ) return@map totalItems - 1
-
-                // Item gần giữa nhất
-                val center = viewportStart + layoutInfo.viewportSize.width / 2
-                visibleItems.minByOrNull {
-                    abs((it.offset + it.size / 2) - center)
-                }?.index ?: selectedIndex.value
-            }
-            .distinctUntilChanged()
-            .collectLatest { index ->
-                selectedIndex.value = index
-            }
-    }
 
     LazyRow(
-        state = listState,
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        itemsIndexed(CategoryList) { index, category ->
-            val isSelected = selectedIndex.value == index
-
+        items(CategoryList) { category ->
             CategoryCard(
-                modifier = Modifier.onSizeChanged { cardSize = it.width },
                 category = category,
-                isSelected = isSelected,
-                onClick = {
-                    clickedIndex.value = index // <- đánh dấu đã click
-                    coroutineScope.launch {
-                        // Cuộn item ra giữa
-                        listState.animateScrollToItem(
-                            index = index,
-                            scrollOffset = (listState.layoutInfo.viewportSize.width / 2) - (cardSize / 2)
-                        )
-                        delay(300) // chờ scroll xong chút xíu rồi gọi hàm click
-                        onCategoryClick(category) // xử lý riêng
-                    }
-                }
+                onClick = {}
             )
         }
     }
@@ -269,7 +242,7 @@ fun SectionRestaurant(
             .padding(vertical = 24.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {

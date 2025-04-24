@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.shopfood.ui.theme.backgroundColorGrayLight
 
 @Composable
 fun TextFieldCustom(
@@ -96,12 +97,12 @@ fun TextFieldCustomWithSearch(
             unfocusedBorderColor = Color.Transparent,
             cursorColor = MaterialTheme.colorScheme.outline,
             disabledBorderColor = Color.Transparent,
-            unfocusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
-            focusedContainerColor = MaterialTheme.colorScheme.outlineVariant,
-            disabledContainerColor = MaterialTheme.colorScheme.outlineVariant,
-            focusedTextColor = MaterialTheme.colorScheme.outline,
-            unfocusedTextColor = MaterialTheme.colorScheme.outline,
-            disabledTextColor = MaterialTheme.colorScheme.outline
+            unfocusedContainerColor = backgroundColorGrayLight,
+            focusedContainerColor = backgroundColorGrayLight,
+            disabledContainerColor = backgroundColorGrayLight,
+            focusedTextColor = Color.DarkGray,
+            unfocusedTextColor = Color.DarkGray,
+            disabledTextColor = Color.DarkGray
         ),
         trailingIcon = {
             if (value.isNotBlank()) {
