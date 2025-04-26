@@ -15,82 +15,71 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shopfood.R
+import com.example.shopfood.domain.model.Restaurant
+import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.presentation.component.CategoryCard
 import com.example.shopfood.presentation.component.RestaurantCard
 import com.example.shopfood.presentation.component.ScaffoldWithNoSafeArea
 import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextCustomInputText
 import com.example.shopfood.presentation.component.TextFieldCustomWithSearch
+import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 import com.example.shopfood.ui.theme.ShopfoodTheme
 import com.example.shopfood.ui.theme.grayCustomLight
 import com.example.shopfood.ui.theme.textColorGrayLight
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    homeViewModel: HomeViewModel,
+) {
+    val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
     var valueSearch by remember { mutableStateOf("") }
+
     ScaffoldWithNoSafeArea { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.surface)
-                .padding(vertical = 12.dp, horizontal = 12.dp)
+                .padding(horizontal = 12.dp), contentPadding = PaddingValues(vertical = 12.dp)
         ) {
-            item {
-                SectionHomeFirst()
-            }
+            item { SectionHomeFirst() }
             item {
                 TextFieldCustomWithSearch(
                     value = valueSearch,
                     onValueChange = { valueSearch = it },
-                    modifier = Modifier
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
             }
-            item {
-                SectionHomeWithCategory()
-            }
-            item {
-                ListCategory()
-            }
-            item {
-                SectionRestaurant()
-            }
+            item { SectionHomeWithCategory() }
+            item { ListCategory() }
+            item { SectionRestaurant(restaurantState = restaurantState) }
         }
     }
 }
@@ -114,19 +103,15 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
                         .padding(end = 12.dp)
                         .size(48.dp)
                         .background(
-                            color = grayCustomLight,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
+                            color = grayCustomLight, shape = CircleShape
+                        ), contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Filled.Apps, "",
-                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                        Icons.Filled.Apps, "", tint = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
                 Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start
+                    verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start
                 ) {
                     TextCustom(
                         text = R.string.Delivery_to,
@@ -192,24 +177,18 @@ fun SectionHomeWithCategory(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextCustom(
-                text = R.string.All_Category,
-                style = MaterialTheme.typography.bodyLarge.copy(
+                text = R.string.All_Category, style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold
-                ),
-                color = textColorGrayLight
+                ), color = textColorGrayLight
             )
             Row {
                 TextCustom(
-                    text = R.string.See_all,
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    text = R.string.See_all, style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold
-                    ),
-                    color = textColorGrayLight
+                    ), color = textColorGrayLight
                 )
                 Icon(
-                    Icons.Default.ChevronRight,
-                    "",
-                    tint = MaterialTheme.colorScheme.outline
+                    Icons.Default.ChevronRight, "", tint = MaterialTheme.colorScheme.outline
                 )
             }
         }
@@ -225,16 +204,14 @@ fun ListCategory(onCategoryClick: (Category) -> Unit = {}) {
     ) {
         items(CategoryList) { category ->
             CategoryCard(
-                category = category,
-                onClick = {}
-            )
+                category = category, onClick = {})
         }
     }
 }
 
 @Composable
 fun SectionRestaurant(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier, restaurantState: RestaurantState
 ) {
     Column(
         modifier = modifier
@@ -242,7 +219,9 @@ fun SectionRestaurant(
             .padding(vertical = 24.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -254,13 +233,11 @@ fun SectionRestaurant(
                     text = R.string.See_all
                 )
                 Icon(
-                    Icons.Default.ChevronRight,
-                    "",
-                    tint = MaterialTheme.colorScheme.outline
+                    Icons.Default.ChevronRight, "", tint = MaterialTheme.colorScheme.outline
                 )
             }
         }
-        RestaurantCard {}
+        SetRestaurantItems(restaurantState = restaurantState)
     }
 }
 
@@ -273,10 +250,8 @@ fun CardWithNumber(
             .padding(start = 36.dp)
             .size(48.dp)
             .background(
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                shape = CircleShape
-            ),
-        contentAlignment = Alignment.Center
+                color = MaterialTheme.colorScheme.onSecondaryContainer, shape = CircleShape
+            ), contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Filled.ShoppingBag,
@@ -290,17 +265,66 @@ fun CardWithNumber(
                 .offset(x = 4.dp, y = (-4).dp)
                 .size(24.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center
+                    color = MaterialTheme.colorScheme.primary, shape = CircleShape
+                ), contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "3", // ví dụ có 3 sản phẩm
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
+                color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold
             )
+        }
+    }
+}
+
+@Composable
+fun SetRestaurantItems(restaurantState: RestaurantState, modifier: Modifier = Modifier) {
+    when (restaurantState) {
+        is RestaurantState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is RestaurantState.Success -> {
+            ListItemRestaurant(
+                modifier = modifier, restaurant = restaurantState.restaurantList
+            )
+        }
+
+        is RestaurantState.Failure -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = restaurantState.error, style = TextStyle(
+                        fontSize = 20.sp,
+                    )
+                )
+            }
+        }
+
+        else -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = stringResource(R.string.error_loading_data), style = TextStyle(
+                        fontSize = 20.sp, color = Color.Red
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ListItemRestaurant(
+    modifier: Modifier, restaurant: List<Restaurant>
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        restaurant.forEach { item ->
+            RestaurantCard(
+                restaurant = item, onClick = {})
         }
     }
 }
@@ -314,28 +338,22 @@ val CategoryList = listOf(
     Category(
         imageRes = R.drawable.flame,
         title = R.string.all,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.burger,
         title = R.string.burger,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.drink,
         title = R.string.drink,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.hot_dog,
         title = R.string.hot_dog,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.pizza,
         title = R.string.pizza,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.steak,
         title = R.string.steak,
-    ),
-    Category(
+    ), Category(
         imageRes = R.drawable.sushi,
         title = R.string.sushi,
     )
@@ -345,6 +363,6 @@ val CategoryList = listOf(
 @Composable
 fun HomeScreenPreview() {
     ShopfoodTheme {
-        HomeScreen()
+        //HomeScreen()
     }
 }

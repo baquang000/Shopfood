@@ -1,5 +1,6 @@
 package com.example.shopfood.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,11 +28,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.ImageLoader
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.util.DebugLogger
+import com.example.shopfood.R
+import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.home.Category
 import com.example.shopfood.ui.theme.ShopfoodTheme
 
@@ -92,27 +101,34 @@ fun CategoryCard(
 @Composable
 fun RestaurantCard(
     modifier: Modifier = Modifier,
+    restaurant: Restaurant,
     onClick: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.surface
         ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
             .fillMaxWidth()
             .height(250.dp)
             .clickable { onClick() }
     ) {
-        Box(
+        AsyncImage(
+            model = restaurant.image,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
-                .background(color = MaterialTheme.colorScheme.error)
+                .height(150.dp),
+            error = painterResource(id = R.drawable.error)
         )
         TextCustomInputText(
-            text = "Rose Garden Restaurant",
-            modifier = Modifier.fillMaxWidth(),
+            text = restaurant.Name,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 12.dp, top = 4.dp),
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Bold
             ),
@@ -120,8 +136,10 @@ fun RestaurantCard(
             textAlign = TextAlign.Start,
         )
         TextCustomInputText(
-            text = "Burger-Chicken-Riche-Wings",
-            modifier = Modifier.fillMaxWidth(),
+            text = restaurant.category,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, start = 12.dp),
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = FontWeight.Normal
             ),
@@ -129,18 +147,23 @@ fun RestaurantCard(
             textAlign = TextAlign.Start,
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.Start
         ) {
             IconWithText(
-                text = "4.7"
+                text = restaurant.star.toString(),
+                modifier = Modifier.padding(end = 36.dp),
+                fontWeight = FontWeight.Bold
             )
             IconWithText(
-                text = "Free"
+                text = restaurant.delivery,
+                modifier = Modifier.padding(end = 36.dp)
             )
             IconWithText(
-                text = "20 min"
+                text = restaurant.timeDelivery.toString()
             )
         }
     }
