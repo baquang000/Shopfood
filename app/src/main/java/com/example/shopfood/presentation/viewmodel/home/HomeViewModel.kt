@@ -78,4 +78,8 @@ class HomeViewModel @Inject constructor(
             emitPagedFoods()
         }
     }
+
+    fun getBestFoods(): List<FoodWithRestaurant> {
+        return allFoods.filter { it.food.BestFood }
+    }
 }

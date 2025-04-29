@@ -66,7 +66,7 @@ fun SeeAllScreen(
                     )
             ) {
                 item {
-                    ShowFood(
+                    ShowFoodWithGrid(
                         foodState = foodState,
                         restaurantMap = restaurantMap
                     )
@@ -89,7 +89,8 @@ fun SeeAllScreen(
                 item {
                     SectionRestaurant(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp),
-                        restaurantState = restaurantState)
+                        restaurantState = restaurantState
+                    )
                 }
             }
         }
@@ -97,7 +98,7 @@ fun SeeAllScreen(
 }
 
 @Composable
-fun ShowFood(
+fun ShowFoodWithGrid(
     foodState: FoodState,
     restaurantMap: Map<String, Restaurant>
 ) {
@@ -124,7 +125,7 @@ fun ShowFood(
 @Composable
 fun FoodGrid(
     foods: List<FoodWithRestaurant>,
-    restaurantMap: Map<String, Restaurant>
+    restaurantMap: Map<String, Restaurant>,
 ) {
     FlowRow(
         modifier = Modifier

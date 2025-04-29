@@ -36,5 +36,6 @@
     <string name="Recent_keywords">Recent keywords</string>>
     <string name="error_loading_data">Error loading data</string>
     <string name="show_more">Show more</string>
-
+    <string name="Restaurant_suggested">Suggested Restaurants</string>
+    <string name="popular_food">Popular Fast Food</string>
 </resources>

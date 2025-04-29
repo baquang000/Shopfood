@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -198,7 +199,9 @@ fun IconWithText(
 }
 
 @Composable
-fun CardRecentKeyWord() {
+fun CardRecentKeyWord(
+    modifier: Modifier = Modifier
+) {
     Card(
         shape = RoundedCornerShape(40.dp),
         colors = CardDefaults.cardColors(
@@ -207,7 +210,8 @@ fun CardRecentKeyWord() {
         border = BorderStroke(
             width = 1.dp,
             color = MaterialTheme.colorScheme.outlineVariant
-        )
+        ),
+        modifier = modifier
     ) {
         TextCustomInputText(
             text = "Burger",
@@ -232,7 +236,7 @@ fun FoodSimpleCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
         modifier = modifier
-            .width(175.dp)
+            .width(160.dp)
             .height(240.dp)
             .clickable { }
     ) {
@@ -292,6 +296,66 @@ fun FoodSimpleCard(
     }
 }
 
+@Composable
+fun SimpleRestaurantCard(
+    modifier: Modifier = Modifier,
+    restaurant: Restaurant,
+    onClick: () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .clickable {
+                onClick()
+            }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            AsyncImage(
+                model = restaurant.image,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(80.dp)
+                    .fillMaxHeight(),
+                error = painterResource(id = R.drawable.error)
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                TextCustomInputText(
+                    text = restaurant.Name,
+                    modifier = Modifier
+                        .fillMaxWidth().padding(bottom = 4.dp),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp
+                    ),
+                    color = Color.Black.copy(alpha = 0.8f),
+                    textAlign = TextAlign.Start,
+                )
+                IconWithText(
+                    icon = Icons.Filled.StarOutline,
+                    tintColor = MaterialTheme.colorScheme.primary,
+                    text = restaurant.star.toString()
+                )
+            }
+        }
+    }
+}
 
 @Preview(
     showSystemUi = true,

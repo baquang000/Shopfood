@@ -111,7 +111,7 @@ fun TopBarWithTextAndTwoIcons(
         navigationIcon = {
             Box(
                 modifier = Modifier
-                    .padding(start = 12.dp, top = 24.dp)
+                    .padding(start = 12.dp)
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.onSecondary)
