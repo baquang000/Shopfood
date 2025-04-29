@@ -1,7 +1,7 @@
 package com.example.shopfood.domain.model
 
 data class Restaurant(
-    val id: Int = 0,
+    val Id: Int = 0,
     val Name: String = "",
     val image: String = "",
     val category: String = "",

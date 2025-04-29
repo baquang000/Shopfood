@@ -1,6 +1,5 @@
 package com.example.shopfood.data.remote.firebase.repository
 
-import android.util.Log
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.domain.repository.firebase.RestaurantRepository

@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun TextCustom(
@@ -45,6 +46,8 @@ fun TextCustomInputText(
             color = color,
             fontWeight = FontWeight.W600
         ),
-        textAlign = textAlign
+        textAlign = textAlign,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
     )
 }

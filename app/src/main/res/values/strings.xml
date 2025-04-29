@@ -35,4 +35,6 @@
     <string name="sushi">Sushi</string>
     <string name="Recent_keywords">Recent keywords</string>>
     <string name="error_loading_data">Error loading data</string>
+    <string name="show_more">Show more</string>
+
 </resources>

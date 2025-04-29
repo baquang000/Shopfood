@@ -1,6 +1,5 @@
 package com.example.shopfood.presentation.component
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -29,17 +29,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.ImageLoader
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.util.DebugLogger
 import com.example.shopfood.R
+import com.example.shopfood.domain.model.Food
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.home.Category
 import com.example.shopfood.ui.theme.ShopfoodTheme
@@ -141,9 +139,9 @@ fun RestaurantCard(
                 .fillMaxWidth()
                 .padding(top = 4.dp, start = 12.dp),
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.W700
             ),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = Color.Gray.copy(0.8f),
             textAlign = TextAlign.Start,
         )
         Row(
@@ -176,7 +174,7 @@ fun IconWithText(
     tintColor: Color = Color.Red,
     text: String = "",
     fontWeight: FontWeight = FontWeight.Normal,
-    textColor: Color = MaterialTheme.colorScheme.onSurfaceVariant
+    textColor: Color = Color.Gray.copy(0.8f)
 ) {
     Row(
         modifier = modifier,
@@ -221,6 +219,79 @@ fun CardRecentKeyWord() {
     }
 }
 
+@Composable
+fun FoodSimpleCard(
+    modifier: Modifier = Modifier,
+    food: Food,
+    restaurantName: String,
+) {
+    Card(
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        modifier = modifier
+            .width(175.dp)
+            .height(240.dp)
+            .clickable { }
+    ) {
+        AsyncImage(
+            model = food.ImagePath,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(130.dp),
+            error = painterResource(id = R.drawable.error)
+        )
+        TextCustomInputText(
+            text = food.Title,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp, horizontal = 12.dp),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            ),
+            color = MaterialTheme.colorScheme.scrim,
+            textAlign = TextAlign.Start,
+        )
+        TextCustomInputText(
+            text = restaurantName,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 4.dp, start = 12.dp, end = 4.dp),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontWeight = FontWeight.W600
+            ),
+            color = Color.LightGray,
+            textAlign = TextAlign.Start,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .padding(vertical = 4.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextCustomInputText(
+                text = food.Price.toString() + "$",
+                modifier = Modifier
+                    .padding(top = 4.dp),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.ExtraBold
+                ),
+                color = MaterialTheme.colorScheme.scrim,
+            )
+            ButtonWithIconAdd(
+                modifier = Modifier
+            )
+        }
+    }
+}
+
 
 @Preview(
     showSystemUi = true,
@@ -235,7 +306,11 @@ fun CategoryCardPreview() {
                 .background(color = MaterialTheme.colorScheme.surface),
             verticalArrangement = Arrangement.Center
         ) {
-            CardRecentKeyWord()
+            Row {
+//                FoodSimpleCard()
+//                FoodSimpleCard()
+            }
+
         }
 
     }

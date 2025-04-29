@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopfood.ui.theme.ShopfoodTheme
@@ -56,17 +57,22 @@ fun ScaffoldWithIconInTopBar(
 @Composable
 fun SimpleTopBarWithBackIcon(
     modifier: Modifier = Modifier,
+    title: String = "",
+    backIconColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    backgroundColor: Color = MaterialTheme.colorScheme.onSecondary,
     onBackClick: () -> Unit
 ) {
     TopAppBar(
-        title = {},
+        title = {
+            Text(title)
+        },
         navigationIcon = {
             Box(
                 modifier = Modifier
-                    .padding(start = 12.dp, top = 24.dp)
+                    .padding(start = 12.dp, end = 24.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onSecondary)
+                    .background(backIconColor)
                     .clickable(onClick = onBackClick),
                 contentAlignment = Alignment.Center
             ) {
@@ -80,7 +86,7 @@ fun SimpleTopBarWithBackIcon(
         },
         modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = backgroundColor
         )
     )
 }

@@ -7,7 +7,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.example.shopfood.presentation.home.HomeScreen
+import com.example.shopfood.presentation.home.SeeAllScreen
 import com.example.shopfood.presentation.navigation.nav_graph.RootNavGraph
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 import com.example.shopfood.ui.theme.ShopfoodTheme
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 //                    AppNav()
 //                }
                 val homeViewModel: HomeViewModel = hiltViewModel()
-                HomeScreen(homeViewModel)
+                SeeAllScreen(homeViewModel)
             }
 
         }
