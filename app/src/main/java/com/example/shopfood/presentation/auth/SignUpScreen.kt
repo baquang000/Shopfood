@@ -55,7 +55,11 @@ fun SignUpScreen(
 ) {
     ScaffoldWithIconInTopBar(
         topBar = {
-            SimpleTopBarWithBackIcon(onBackClick = onLogin)
+            SimpleTopBarWithBackIcon(
+                backgroundColor = MaterialTheme.colorScheme.background,
+                backgroundIconColor = MaterialTheme.colorScheme.surface,
+                onBackClick = onLogin
+            )
         },
         content = { paddingValue ->
             Box(

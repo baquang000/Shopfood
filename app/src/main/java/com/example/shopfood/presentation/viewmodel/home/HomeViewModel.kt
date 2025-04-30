@@ -1,5 +1,6 @@
 package com.example.shopfood.presentation.viewmodel.home
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shopfood.domain.model.FoodState
@@ -31,6 +32,9 @@ class HomeViewModel @Inject constructor(
 
     private val _canLoadMore = MutableStateFlow(true)
     val canLoadMore: StateFlow<Boolean> = _canLoadMore
+
+    private val _filteredFoods = mutableStateListOf<FoodWithRestaurant>()
+    val filteredFoods: List<FoodWithRestaurant> get() = _filteredFoods
 
     init {
         fetchRestaurant()
@@ -82,4 +86,10 @@ class HomeViewModel @Inject constructor(
     fun getBestFoods(): List<FoodWithRestaurant> {
         return allFoods.filter { it.food.BestFood }
     }
+
+    fun filterFoodsByCategory(categoryId: Int) {
+        _filteredFoods.clear()
+        _filteredFoods.addAll(allFoods.filter { it.food.CategoryId == categoryId })
+    }
+
 }

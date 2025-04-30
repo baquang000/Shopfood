@@ -46,23 +46,24 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 
 @Composable
 fun SearchScreen(
-    viewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    onBackClick: () -> Unit
 ) {
     var valueSearch by remember { mutableStateOf("") }
-    val restaurantState by viewModel.restaurantState.collectAsStateWithLifecycle()
-    val foodState by viewModel.foodState.collectAsStateWithLifecycle()
+    val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
+    val foodState by homeViewModel.foodState.collectAsStateWithLifecycle()
     val restaurantMap = remember(restaurantState) {
         (restaurantState as? RestaurantState.Success)?.restaurantList?.associateBy { it.Id.toString() }
             ?: emptyMap()
     }
     val bestFoods = remember(foodState) {
-        viewModel.getBestFoods()
+        homeViewModel.getBestFoods()
     }
     ScaffoldWithIconInTopBar(
         topBar = {
             TopBarWithTextAndTwoIcons(
                 title = "Search",
-                onBackClick = {},
+                onBackClick = onBackClick,
                 secondIcon = {
                     CardWithNumber()
                 }
@@ -187,7 +188,7 @@ fun ListItemRestaurantWithSimpleCard(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        restaurant.forEach { item ->
+        restaurant.take(5).forEach { item ->
             SimpleRestaurantCard(
                 restaurant = item, onClick = {})
         }
@@ -229,7 +230,7 @@ fun ShowFoodWithBestFood(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         maxItemsInEachRow = 2
     ) {
-        foods.forEach { foodWithRestaurant ->
+        foods.take(5).forEach { foodWithRestaurant ->
             val restaurant = restaurantMap[foodWithRestaurant.restaurantId]
             FoodSimpleCard(
                 food = foodWithRestaurant.food,

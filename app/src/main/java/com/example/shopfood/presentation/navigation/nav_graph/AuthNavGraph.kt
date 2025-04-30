@@ -15,7 +15,9 @@ import com.example.shopfood.presentation.viewmodel.auth.LoginViewModel
 import com.example.shopfood.presentation.viewmodel.auth.SignUpViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
-fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.authNavGraph(
+    navController: NavHostController,
+) {
     navigation(
         startDestination = Router.IntroductionScreen.route,
         route = Graph.AUTH

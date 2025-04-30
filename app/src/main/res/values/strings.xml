@@ -33,9 +33,15 @@
     <string name="pizza">Pizza</string>
     <string name="steak">Steak</string>
     <string name="sushi">Sushi</string>
+    <string name="chicken">Chicken</string>
     <string name="Recent_keywords">Recent keywords</string>>
     <string name="error_loading_data">Error loading data</string>
     <string name="show_more">Show more</string>
     <string name="Restaurant_suggested">Suggested Restaurants</string>
     <string name="popular_food">Popular Fast Food</string>
+    <string name="size">Size:</string>
+    <string name="size_10">10\"</string>
+    <string name="size_14">14\"</string>
+    <string name="size_16">16\"</string>
+    <string name="ingredients">INGREDIENTS</string>
 </resources>

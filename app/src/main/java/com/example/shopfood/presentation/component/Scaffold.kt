@@ -58,7 +58,7 @@ fun ScaffoldWithIconInTopBar(
 fun SimpleTopBarWithBackIcon(
     modifier: Modifier = Modifier,
     title: String = "",
-    backIconColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    backgroundIconColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.onSecondary,
     onBackClick: () -> Unit
 ) {
@@ -72,7 +72,7 @@ fun SimpleTopBarWithBackIcon(
                     .padding(start = 12.dp, end = 24.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(backIconColor)
+                    .background(backgroundIconColor)
                     .clickable(onClick = onBackClick),
                 contentAlignment = Alignment.Center
             ) {
@@ -80,7 +80,7 @@ fun SimpleTopBarWithBackIcon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
                     contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
         },

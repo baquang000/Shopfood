@@ -1,5 +1,9 @@
 package com.example.shopfood.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Food(
     val BestFood: Boolean = false,
     val CategoryId: Int = 0,
@@ -11,4 +15,4 @@ data class Food(
     val show: Boolean = true,
     val Id: Int = 0,
     val ImagePath: String = "",
-)
+) : Parcelable

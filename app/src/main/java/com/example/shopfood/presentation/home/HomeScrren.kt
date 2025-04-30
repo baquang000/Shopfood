@@ -1,6 +1,7 @@
 package com.example.shopfood.presentation.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,9 +43,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.shopfood.R
+import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.presentation.component.CategoryCard
+import com.example.shopfood.presentation.component.FoodCard
 import com.example.shopfood.presentation.component.RestaurantCard
 import com.example.shopfood.presentation.component.ScaffoldWithNoSafeArea
 import com.example.shopfood.presentation.component.TextCustom
@@ -58,10 +61,19 @@ import com.example.shopfood.ui.theme.textColorGrayLight
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    onClickSeeAll: () -> Unit = {},
+    onClickSearch: () -> Unit = {},
+    onClickSeeAllRestaurant: () -> Unit = {},
+    onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> }
 ) {
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
-    var valueSearch by remember { mutableStateOf("") }
-
+    var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
+    val restaurantMap = remember(restaurantState) {
+        (restaurantState as? RestaurantState.Success)
+            ?.restaurantList
+            ?.associateBy { it.Id }
+            ?: emptyMap()
+    }
     ScaffoldWithNoSafeArea { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -72,14 +84,54 @@ fun HomeScreen(
             item { SectionHomeFirst() }
             item {
                 TextFieldCustomWithSearch(
-                    value = valueSearch,
-                    onValueChange = { valueSearch = it },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    value = "",
+                    onValueChange = { },
+                    readOnly = true,
+                    enabled = false,
+                    modifier = Modifier.padding(vertical = 8.dp).clickable{
+                        onClickSearch()
+                    }
                 )
             }
-            item { SectionHomeWithCategory() }
-            item { ListCategory() }
-            item { SectionRestaurant(restaurantState = restaurantState) }
+            item {
+                SectionHomeWithCategory(
+                    onClickSeeAll = onClickSeeAll
+                )
+            }
+            if (selectedCategoryId == null) {
+                item {
+                    ListCategory(
+                        onCategoryClick = { category ->
+                            selectedCategoryId = category.id
+                            homeViewModel.filterFoodsByCategory(category.id)
+                        }
+                    )
+                }
+            } else {
+                item {
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        items(homeViewModel.filteredFoods) { food ->
+                            val restaurant =
+                                restaurantMap[food.restaurantId.toInt()] ?: Restaurant()
+                            FoodCard(
+                                food = food,
+                                onClick = {
+                                    onClickFood(food, restaurant)
+                                })
+                        }
+                    }
+                }
+            }
+            item {
+                SectionRestaurant(
+                    restaurantState = restaurantState,
+                    onClickSeeAllRestaurant = onClickSeeAllRestaurant
+                )
+            }
         }
     }
 }
@@ -164,7 +216,8 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
 
 @Composable
 fun SectionHomeWithCategory(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickSeeAll: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -181,7 +234,11 @@ fun SectionHomeWithCategory(
                     fontWeight = FontWeight.SemiBold
                 ), color = textColorGrayLight
             )
-            Row {
+            Row(
+                modifier = Modifier.clickable {
+                    onClickSeeAll()
+                }
+            ) {
                 TextCustom(
                     text = R.string.See_all, style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold
@@ -197,21 +254,23 @@ fun SectionHomeWithCategory(
 
 @Composable
 fun ListCategory(onCategoryClick: (Category) -> Unit = {}) {
-
     LazyRow(
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(CategoryList) { category ->
             CategoryCard(
-                category = category, onClick = {})
+                category = category, onClick = {
+                    onCategoryClick(category)
+                })
         }
     }
 }
 
 @Composable
 fun SectionRestaurant(
-    modifier: Modifier = Modifier, restaurantState: RestaurantState
+    modifier: Modifier = Modifier, restaurantState: RestaurantState,
+    onClickSeeAllRestaurant: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -228,7 +287,11 @@ fun SectionRestaurant(
             TextCustom(
                 text = R.string.open_restaurant
             )
-            Row {
+            Row(
+                modifier = Modifier.clickable {
+                    onClickSeeAllRestaurant()
+                }
+            ) {
                 TextCustom(
                     text = R.string.See_all
                 )
@@ -269,7 +332,7 @@ fun CardWithNumber(
                 ), contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "3", // ví dụ có 3 sản phẩm
+                text = "3",
                 color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold
             )
         }
@@ -322,7 +385,7 @@ fun ListItemRestaurant(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        restaurant.forEach { item ->
+        restaurant.take(3).forEach { item ->
             RestaurantCard(
                 restaurant = item, onClick = {})
         }
@@ -332,30 +395,43 @@ fun ListItemRestaurant(
 data class Category(
     val imageRes: Int,
     val title: Int,
+    val id: Int
 )
 
 val CategoryList = listOf(
     Category(
         imageRes = R.drawable.flame,
         title = R.string.all,
+        id = 7
     ), Category(
         imageRes = R.drawable.burger,
         title = R.string.burger,
+        id = 1
     ), Category(
         imageRes = R.drawable.drink,
         title = R.string.drink,
+        id = 6
     ), Category(
         imageRes = R.drawable.hot_dog,
         title = R.string.hot_dog,
+        id = 5
     ), Category(
         imageRes = R.drawable.pizza,
         title = R.string.pizza,
+        id = 0
     ), Category(
         imageRes = R.drawable.steak,
         title = R.string.steak,
+        id = 4
     ), Category(
         imageRes = R.drawable.sushi,
         title = R.string.sushi,
+        id = 3
+    ),
+    Category(
+        imageRes = R.drawable.chicken,
+        title = R.string.chicken,
+        id = 2
     )
 )
 

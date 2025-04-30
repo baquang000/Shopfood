@@ -72,9 +72,11 @@ fun TextFieldCustom(
 
 @Composable
 fun TextFieldCustomWithSearch(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    readOnly : Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -115,6 +117,8 @@ fun TextFieldCustomWithSearch(
             Icon(
                 Icons.Filled.Search, ""
             )
-        }
+        },
+        enabled = enabled,
+        readOnly = readOnly
     )
 }

@@ -36,24 +36,25 @@ import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 
 @Composable
 fun SeeAllScreen(
-    viewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    onBackClick : () -> Unit = {}
 ) {
-    val foodState by viewModel.foodState.collectAsStateWithLifecycle()
-    val restaurantState by viewModel.restaurantState.collectAsStateWithLifecycle()
+    val foodState by homeViewModel.foodState.collectAsStateWithLifecycle()
+    val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
     val restaurantMap = remember(restaurantState) {
         (restaurantState as? RestaurantState.Success)?.restaurantList?.associateBy { it.Id.toString() }
             ?: emptyMap()
     }
-    val canLoadMore by viewModel.canLoadMore.collectAsStateWithLifecycle()
+    val canLoadMore by homeViewModel.canLoadMore.collectAsStateWithLifecycle()
 
     ScaffoldWithIconInTopBar(
         topBar = {
             SimpleTopBarWithBackIcon(
                 modifier = Modifier.fillMaxWidth(),
                 backgroundColor = MaterialTheme.colorScheme.surface,
-                backIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                backgroundIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 title = "See All",
-                onBackClick = {}
+                onBackClick = onBackClick
             )
         },
         content = { paddingValues ->
@@ -74,7 +75,7 @@ fun SeeAllScreen(
                 if (canLoadMore) {
                     item {
                         ShowNextButton(
-                            onClick = viewModel::loadMoreFoods
+                            onClick = homeViewModel::loadMoreFoods
                         )
                     }
                 } else {
