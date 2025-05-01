@@ -10,6 +10,7 @@ data class Restaurant(
     val image: String = "",
     val category: String = "",
     val star: Double = 0.0,
-    val delivery : String = "",
-    val timeDelivery : Int = 0
+    val delivery: String = "",
+    val timeDelivery: Int = 0,
+    val description: String = ""
 ) : Parcelable

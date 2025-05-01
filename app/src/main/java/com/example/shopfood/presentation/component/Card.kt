@@ -99,6 +99,46 @@ fun CategoryCard(
 }
 
 @Composable
+fun CategorySimpleCard(
+    modifier: Modifier = Modifier,
+    category: Category,
+    isSelected: Boolean = false,
+    onClick: () -> Unit
+) {
+    Card(
+        shape = RoundedCornerShape(40.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = modifier
+            .padding(end = 8.dp)
+            .height(48.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(
+                    shape = RoundedCornerShape(40.dp)
+                )
+                .clickable(
+                    onClick = onClick
+                )
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextCustom(
+                modifier = Modifier.padding(horizontal = 12.dp),
+                text = category.title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+    }
+}
+
+@Composable
 fun RestaurantCard(
     modifier: Modifier = Modifier,
     restaurant: Restaurant,

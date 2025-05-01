@@ -3,10 +3,13 @@ package com.example.shopfood.presentation.component
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -14,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.shopfood.ui.theme.backgroundColorGrayLight
@@ -76,7 +80,9 @@ fun TextFieldCustomWithSearch(
     value: String,
     onValueChange: (String) -> Unit,
     enabled: Boolean = true,
-    readOnly : Boolean = false
+    readOnly: Boolean = false,
+    searchClick: () -> Unit = {},
+    clearClick: () -> Unit = {}
 ) {
     OutlinedTextField(
         value = value,
@@ -104,21 +110,43 @@ fun TextFieldCustomWithSearch(
             disabledContainerColor = backgroundColorGrayLight,
             focusedTextColor = Color.DarkGray,
             unfocusedTextColor = Color.DarkGray,
-            disabledTextColor = Color.DarkGray
+            disabledTextColor = Color.DarkGray,
+            disabledLeadingIconColor = Color.DarkGray,
+            disabledTrailingIconColor = Color.DarkGray,
+            focusedLeadingIconColor = Color.Black,
+            focusedTrailingIconColor = Color.Black,
         ),
         trailingIcon = {
             if (value.isNotBlank()) {
-                Icon(
-                    Icons.Filled.Close, ""
-                )
+                IconButton(
+                    onClick = clearClick
+                ) {
+                    Icon(
+                        Icons.Filled.Close, ""
+                    )
+                }
+
             } else null
         },
         leadingIcon = {
-            Icon(
-                Icons.Filled.Search, ""
-            )
+            IconButton(
+                onClick = searchClick
+            ) {
+                Icon(
+                    Icons.Filled.Search, ""
+                )
+            }
+
         },
         enabled = enabled,
-        readOnly = readOnly
+        readOnly = readOnly,
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                searchClick()
+            }
+        )
     )
 }

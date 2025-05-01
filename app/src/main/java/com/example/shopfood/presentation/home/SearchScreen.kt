@@ -47,7 +47,8 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 @Composable
 fun SearchScreen(
     homeViewModel: HomeViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onSearchClick: (String) -> Unit,
 ) {
     var valueSearch by remember { mutableStateOf("") }
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
@@ -82,6 +83,12 @@ fun SearchScreen(
                     TextFieldCustomWithSearch(
                         value = valueSearch,
                         onValueChange = { valueSearch = it },
+                        searchClick = {
+                            onSearchClick(valueSearch)
+                        },
+                        clearClick = {
+                            valueSearch = ""
+                        },
                         modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
                     )
                 }

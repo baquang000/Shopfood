@@ -64,7 +64,8 @@ fun HomeScreen(
     onClickSeeAll: () -> Unit = {},
     onClickSearch: () -> Unit = {},
     onClickSeeAllRestaurant: () -> Unit = {},
-    onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> }
+    onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
+    onClickRestaurant: (Restaurant) -> Unit = {}
 ) {
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
     var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
@@ -88,9 +89,11 @@ fun HomeScreen(
                     onValueChange = { },
                     readOnly = true,
                     enabled = false,
-                    modifier = Modifier.padding(vertical = 8.dp).clickable{
-                        onClickSearch()
-                    }
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .clickable {
+                            onClickSearch()
+                        }
                 )
             }
             item {
@@ -129,7 +132,10 @@ fun HomeScreen(
             item {
                 SectionRestaurant(
                     restaurantState = restaurantState,
-                    onClickSeeAllRestaurant = onClickSeeAllRestaurant
+                    onClickSeeAllRestaurant = onClickSeeAllRestaurant,
+                    onClick = { restaurant ->
+                        onClickRestaurant(restaurant)
+                    }
                 )
             }
         }
@@ -270,7 +276,8 @@ fun ListCategory(onCategoryClick: (Category) -> Unit = {}) {
 @Composable
 fun SectionRestaurant(
     modifier: Modifier = Modifier, restaurantState: RestaurantState,
-    onClickSeeAllRestaurant: () -> Unit = {}
+    onClickSeeAllRestaurant: () -> Unit = {},
+    onClick: (Restaurant) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -300,7 +307,12 @@ fun SectionRestaurant(
                 )
             }
         }
-        SetRestaurantItems(restaurantState = restaurantState)
+        SetRestaurantItems(
+            restaurantState = restaurantState,
+            onClick = { restaurant ->
+                onClick(restaurant)
+            }
+        )
     }
 }
 
@@ -340,7 +352,10 @@ fun CardWithNumber(
 }
 
 @Composable
-fun SetRestaurantItems(restaurantState: RestaurantState, modifier: Modifier = Modifier) {
+fun SetRestaurantItems(
+    restaurantState: RestaurantState, modifier: Modifier = Modifier,
+    onClick: (Restaurant) -> Unit = {}
+) {
     when (restaurantState) {
         is RestaurantState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -350,7 +365,10 @@ fun SetRestaurantItems(restaurantState: RestaurantState, modifier: Modifier = Mo
 
         is RestaurantState.Success -> {
             ListItemRestaurant(
-                modifier = modifier, restaurant = restaurantState.restaurantList
+                modifier = modifier, restaurant = restaurantState.restaurantList,
+                onClick = { restaurant ->
+                    onClick(restaurant)
+                }
             )
         }
 
@@ -378,16 +396,19 @@ fun SetRestaurantItems(restaurantState: RestaurantState, modifier: Modifier = Mo
 
 @Composable
 fun ListItemRestaurant(
-    modifier: Modifier, restaurant: List<Restaurant>
+    modifier: Modifier, restaurant: List<Restaurant>,
+    onClick: (Restaurant) -> Unit = {}
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        restaurant.take(3).forEach { item ->
+        restaurant.take(3).forEach { restaurant ->
             RestaurantCard(
-                restaurant = item, onClick = {})
+                restaurant = restaurant, onClick = {
+                    onClick(restaurant)
+                })
         }
     }
 }
@@ -400,39 +421,45 @@ data class Category(
 
 val CategoryList = listOf(
     Category(
-        imageRes = R.drawable.flame,
-        title = R.string.all,
-        id = 7
-    ), Category(
-        imageRes = R.drawable.burger,
-        title = R.string.burger,
-        id = 1
-    ), Category(
-        imageRes = R.drawable.drink,
-        title = R.string.drink,
-        id = 6
-    ), Category(
-        imageRes = R.drawable.hot_dog,
-        title = R.string.hot_dog,
-        id = 5
-    ), Category(
         imageRes = R.drawable.pizza,
         title = R.string.pizza,
         id = 0
-    ), Category(
-        imageRes = R.drawable.steak,
-        title = R.string.steak,
-        id = 4
-    ), Category(
-        imageRes = R.drawable.sushi,
-        title = R.string.sushi,
-        id = 3
+    ),
+    Category(
+        imageRes = R.drawable.burger,
+        title = R.string.burger,
+        id = 1
     ),
     Category(
         imageRes = R.drawable.chicken,
         title = R.string.chicken,
         id = 2
-    )
+    ),
+    Category(
+        imageRes = R.drawable.sushi,
+        title = R.string.sushi,
+        id = 3
+    ),
+    Category(
+        imageRes = R.drawable.steak,
+        title = R.string.steak,
+        id = 4
+    ),
+    Category(
+        imageRes = R.drawable.hot_dog,
+        title = R.string.hot_dog,
+        id = 5
+    ),
+    Category(
+        imageRes = R.drawable.drink,
+        title = R.string.drink,
+        id = 6
+    ),
+    Category(
+        imageRes = R.drawable.flame,
+        title = R.string.all,
+        id = 7
+    ),
 )
 
 @Preview(showBackground = true)

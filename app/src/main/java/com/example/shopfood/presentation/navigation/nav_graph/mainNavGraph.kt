@@ -11,6 +11,8 @@ import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.home.FoodDetailScreen
 import com.example.shopfood.presentation.home.HomeScreen
+import com.example.shopfood.presentation.home.RestaurantDetailScreen
+import com.example.shopfood.presentation.home.SearchResultScreen
 import com.example.shopfood.presentation.home.SearchScreen
 import com.example.shopfood.presentation.home.SeeAllRestaurantScreen
 import com.example.shopfood.presentation.home.SeeAllScreen
@@ -47,6 +49,13 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onClickSearch = {
                     navController.navigate(Router.SearchScreen.route)
+                },
+                onClickRestaurant = { restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.RestaurantViewScreen.route)
                 }
             )
         }
@@ -57,6 +66,13 @@ fun NavGraphBuilder.mainNavGraph(
                 homeViewModel = homeViewModel,
                 onBackClick = {
                     navController.navigateUp()
+                },
+                onSearchClick = { valueSearch ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "search_value",
+                        valueSearch
+                    )
+                    navController.navigate(Router.SearchResultScreen.route)
                 }
             )
         }
@@ -110,5 +126,48 @@ fun NavGraphBuilder.mainNavGraph(
             }
         }
 
+        composable(Router.RestaurantViewScreen.route) { backStackEntry ->
+            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val restaurant = navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<Restaurant>("restaurant")
+            DisposableEffect(Unit) {
+                onDispose {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.remove<Restaurant>("restaurant")
+                }
+            }
+            if (restaurant != null) {
+                RestaurantDetailScreen(
+                    homeViewModel = homeViewModel,
+                    restaurant = restaurant,
+                    onBackClick = {
+                        navController.navigateUp()
+                    }
+                )
+            }
+        }
+
+        composable(Router.SearchResultScreen.route) { backStackEntry ->
+            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val value = navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.get<String>("search_value")
+            DisposableEffect(Unit) {
+                onDispose {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.remove<String>("search_value")
+                }
+            }
+            SearchResultScreen(
+                homeViewModel = homeViewModel,
+                valueSearch = value ?: "",
+                onBackClick = {
+                    navController.navigateUp()
+                },
+            )
+        }
     }
 }
