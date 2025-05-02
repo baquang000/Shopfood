@@ -69,16 +69,16 @@ class OrderViewModel @Inject constructor(
     fun submitOrderToRealtimeDatabase(
         onResult: (Boolean, String?) -> Unit
     ) {
-//        val user = FirebaseAuth.getInstance().currentUser
-//        val userId = user?.uid
-//
-//        if (userId == null) {
-//            onFailure(Exception("User not logged in"))
-//            return
-//        }
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
+
+        if (userId == null) {
+            onResult(false, "User not logged in")
+            return
+        }
 
         val order = Order(
-            userId = "123",
+            userId = userId,
             items = selectedFoods,
             totalPrice = totalPrice,
             timestamp = System.currentTimeMillis()

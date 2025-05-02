@@ -4,10 +4,12 @@ import com.example.shopfood.data.remote.firebase.repository.AuthRepositoryImpl
 import com.example.shopfood.data.remote.firebase.repository.FoodRepositoryImpl
 import com.example.shopfood.data.remote.firebase.repository.OrderRepositoryImpl
 import com.example.shopfood.data.remote.firebase.repository.RestaurantRepositoryImpl
+import com.example.shopfood.data.remote.firebase.repository.UserRepositoryImpl
 import com.example.shopfood.domain.repository.firebase.AuthRepository
 import com.example.shopfood.domain.repository.firebase.FoodRepository
 import com.example.shopfood.domain.repository.firebase.OrderRepository
 import com.example.shopfood.domain.repository.firebase.RestaurantRepository
+import com.example.shopfood.domain.repository.firebase.UserRepository
 import com.example.shopfood.domain.usecase.firebase.auth.AuthUseCases
 import com.example.shopfood.domain.usecase.firebase.auth.LoginUseCase
 import com.example.shopfood.domain.usecase.firebase.auth.SignupUseCase
@@ -17,6 +19,9 @@ import com.example.shopfood.domain.usecase.firebase.home.order.OrderUseCases
 import com.example.shopfood.domain.usecase.firebase.home.order.SaveOrderUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.GetAllRestaurantUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.RestaurantUseCases
+import com.example.shopfood.domain.usecase.firebase.home.user.GetUserUseCase
+import com.example.shopfood.domain.usecase.firebase.home.user.UpdateUserUseCase
+import com.example.shopfood.domain.usecase.firebase.home.user.UserUseCases
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import dagger.Module
@@ -62,6 +67,11 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideUserRepository(database: FirebaseDatabase): UserRepository =
+        UserRepositoryImpl(database)
+
+    @Provides
+    @Singleton
     fun provideAuthUseCase(authRepository: AuthRepository): AuthUseCases {
         return AuthUseCases(
             login = LoginUseCase(authRepository),
@@ -92,4 +102,12 @@ object AppModule {
             saveOrder = SaveOrderUseCase(orderRepository)
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideUserUseCases(userRepository: UserRepository): UserUseCases =
+        UserUseCases(
+            getUser = GetUserUseCase(userRepository),
+            updateUser = UpdateUserUseCase(userRepository)
+        )
 }

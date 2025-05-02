@@ -14,7 +14,7 @@ fun RootNavGraph(navController: NavHostController) {
     val timeAnimation = 1000
     NavHost(
         navController = navController,
-        startDestination = Graph.MAIN,
+        startDestination = Graph.AUTH,
         route = Graph.ROOT,
         enterTransition = {
             slideIntoContainer(

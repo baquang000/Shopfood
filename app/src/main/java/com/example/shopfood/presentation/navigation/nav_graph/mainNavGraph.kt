@@ -21,10 +21,13 @@ import com.example.shopfood.presentation.home.SearchScreen
 import com.example.shopfood.presentation.home.SeeAllRestaurantScreen
 import com.example.shopfood.presentation.home.SeeAllScreen
 import com.example.shopfood.presentation.home.SuccessOrderScreen
+import com.example.shopfood.presentation.home.profile.EditUserInfoScreen
+import com.example.shopfood.presentation.home.profile.UserInfoScreen
 import com.example.shopfood.presentation.navigation.Graph
 import com.example.shopfood.presentation.navigation.Router
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
+import com.example.shopfood.presentation.viewmodel.home.UserViewModel
 
 @SuppressLint("UnrememberedGetBackStackEntry")
 @OptIn(ExperimentalAnimationApi::class)
@@ -232,7 +235,41 @@ fun NavGraphBuilder.mainNavGraph(
         }
         composable(Router.ProfileScreen.route) { backStackEntry ->
             ProfileScreen(
+                onClickUserInfo = {
+                    navController.navigate(Router.UserInfoScreen.route)
+                },
+                onBackClick = {
+                    navController.navigate(Router.HomeScreen.route)
+                }
+            )
+        }
 
+        composable(Router.UserInfoScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val userViewModel: UserViewModel = hiltViewModel(mainEntry)
+            UserInfoScreen(
+                userViewModel = userViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onClickEdit = {
+                    navController.navigate(Router.EditUserInfoScreen.route)
+                }
+            )
+        }
+
+        composable(Router.EditUserInfoScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val userViewModel: UserViewModel = hiltViewModel(mainEntry)
+            EditUserInfoScreen(
+                userViewModel = userViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                }
             )
         }
     }

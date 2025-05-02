@@ -46,7 +46,10 @@ import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
 import com.example.shopfood.presentation.component.TextCustom
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    onClickUserInfo: () -> Unit = {},
+    onBackClick: () -> Unit = {}
+) {
     var openDialog by remember {
         mutableStateOf(false)
     }
@@ -55,7 +58,7 @@ fun ProfileScreen() {
             SimpleTopBarWithBackIcon(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.profile),
-                onBackClick = {},
+                onBackClick = onBackClick,
                 textStyle = MaterialTheme.typography.headlineSmall.copy(
                     color = MaterialTheme.colorScheme.background
                 ),
@@ -87,7 +90,7 @@ fun ProfileScreen() {
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 12.dp)
                                 .heightIn(min = 60.dp)
-                                .clickable { },
+                                .clickable { onClickUserInfo() },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {

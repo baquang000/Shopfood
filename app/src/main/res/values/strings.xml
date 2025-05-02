@@ -62,4 +62,11 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="favourite">Favourite</string>
+    <string name="person_info">Personal Info</string>
+    <string name="full_name">FULL NAME</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="bio">BIO</string>
+    <string name="save">Save</string>
 </resources>
