@@ -31,11 +31,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -51,6 +53,8 @@ import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextFieldCustom
 import com.example.shopfood.presentation.viewmodel.auth.LoginViewModel
 import com.example.shopfood.ui.theme.ShopfoodTheme
+import com.example.shopfood.until.RememberMePreference.setRememberMe
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -104,8 +108,10 @@ fun SessionLoginTwo(
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val email = viewModel.email
     val password = viewModel.password
-    var checked by remember { mutableStateOf(false) }
+    var rememberMe by remember { mutableStateOf(false) }
     var isShow by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     LaunchedEffect(loginState) {
         if (loginState is AuthResult.Success) {
             onLoginSuccess()
@@ -176,9 +182,12 @@ fun SessionLoginTwo(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(
-                        checked = checked,
+                        checked = rememberMe,
                         onCheckedChange = {
-                            checked = !checked
+                            rememberMe = it
+                            coroutineScope.launch {
+                                setRememberMe(context, it)
+                            }
                         },
                         colors = CheckboxDefaults.colors(
                             checkedColor = MaterialTheme.colorScheme.primary,

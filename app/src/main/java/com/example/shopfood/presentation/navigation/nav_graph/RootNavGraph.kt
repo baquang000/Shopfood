@@ -10,11 +10,14 @@ import com.example.shopfood.presentation.navigation.Graph
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RootNavGraph(navController: NavHostController) {
+fun RootNavGraph(
+    navController: NavHostController,
+    startDestination: String
+) {
     val timeAnimation = 1000
     NavHost(
         navController = navController,
-        startDestination = Graph.AUTH,
+        startDestination = startDestination,
         route = Graph.ROOT,
         enterTransition = {
             slideIntoContainer(

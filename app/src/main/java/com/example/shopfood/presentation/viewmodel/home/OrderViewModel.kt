@@ -69,7 +69,7 @@ class OrderViewModel @Inject constructor(
     fun submitOrderToRealtimeDatabase(
         onResult: (Boolean, String?) -> Unit
     ) {
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = firebaseAuth.currentUser
         val userId = user?.uid
 
         if (userId == null) {
