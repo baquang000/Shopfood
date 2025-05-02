@@ -1,5 +1,6 @@
 package com.example.shopfood.presentation.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.shopfood.R
@@ -34,9 +36,12 @@ import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 @Composable
 fun CartScreen(
     orderViewModel: OrderViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onNavigateToSuccess : () -> Unit
 ) {
     val foodInCart = orderViewModel.selectedFoods
+    val totalPrice = orderViewModel.totalPrice
+    val context = LocalContext.current
     Scaffold(
         topBar = {
             SimpleTopBarWithBackIcon(
@@ -52,7 +57,25 @@ fun CartScreen(
             )
         },
         bottomBar = {
-            BottomBarWithCart()
+            BottomBarWithCart(
+                totalPrice = totalPrice,
+                onClickPlaceOrder = {
+                    orderViewModel.submitOrderToRealtimeDatabase(
+                        onResult = { success, message ->
+                            if (success) {
+                                onNavigateToSuccess()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Đặt hàng thất bại: $message",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        },
+                    )
+                }
+            )
         },
         content = { paddingValues ->
             LazyColumn(
@@ -85,7 +108,9 @@ fun CartScreen(
 
 @Composable
 fun BottomBarWithCart(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    totalPrice: Int = 0,
+    onClickPlaceOrder: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -158,7 +183,7 @@ fun BottomBarWithCart(
                     color = Color.Gray.copy(0.8f)
                 )
                 TextCustomInputText(
-                    text = "95$",
+                    text = "$ $totalPrice",
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold
                     ),
@@ -167,7 +192,8 @@ fun BottomBarWithCart(
             }
             ButtonCustom(
                 text = R.string.place_order,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onClickPlaceOrder
             )
         }
     }

@@ -18,4 +18,6 @@ sealed class Router(val route: String){
     data object RestaurantViewScreen : Router("restaurant_view_screen")
     data object SearchResultScreen: Router("search_result_screen")
     data object CartScreen: Router("cart_screen")
+    data object SuccessOrderScreen: Router("success_order_screen")
+    data object ProfileScreen: Router("profile_screen")
 }

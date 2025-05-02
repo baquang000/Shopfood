@@ -2,15 +2,19 @@ package com.example.shopfood.di
 
 import com.example.shopfood.data.remote.firebase.repository.AuthRepositoryImpl
 import com.example.shopfood.data.remote.firebase.repository.FoodRepositoryImpl
+import com.example.shopfood.data.remote.firebase.repository.OrderRepositoryImpl
 import com.example.shopfood.data.remote.firebase.repository.RestaurantRepositoryImpl
 import com.example.shopfood.domain.repository.firebase.AuthRepository
 import com.example.shopfood.domain.repository.firebase.FoodRepository
+import com.example.shopfood.domain.repository.firebase.OrderRepository
 import com.example.shopfood.domain.repository.firebase.RestaurantRepository
 import com.example.shopfood.domain.usecase.firebase.auth.AuthUseCases
 import com.example.shopfood.domain.usecase.firebase.auth.LoginUseCase
 import com.example.shopfood.domain.usecase.firebase.auth.SignupUseCase
 import com.example.shopfood.domain.usecase.firebase.home.food.FoodUseCases
 import com.example.shopfood.domain.usecase.firebase.home.food.GetAllFoodUseCase
+import com.example.shopfood.domain.usecase.firebase.home.order.OrderUseCases
+import com.example.shopfood.domain.usecase.firebase.home.order.SaveOrderUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.GetAllRestaurantUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.RestaurantUseCases
 import com.google.firebase.auth.FirebaseAuth
@@ -52,6 +56,11 @@ object AppModule {
     }
 
     @Provides
+    fun provideOrderRepository(firebaseDatabase: FirebaseDatabase): OrderRepository {
+        return OrderRepositoryImpl(firebaseDatabase)
+    }
+
+    @Provides
     @Singleton
     fun provideAuthUseCase(authRepository: AuthRepository): AuthUseCases {
         return AuthUseCases(
@@ -73,6 +82,14 @@ object AppModule {
     fun provideFoodUseCases(foodRepository: FoodRepository): FoodUseCases {
         return FoodUseCases(
             getAllFood = GetAllFoodUseCase(foodRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideOrderUseCases(orderRepository: OrderRepository): OrderUseCases {
+        return OrderUseCases(
+            saveOrder = SaveOrderUseCase(orderRepository)
         )
     }
 }

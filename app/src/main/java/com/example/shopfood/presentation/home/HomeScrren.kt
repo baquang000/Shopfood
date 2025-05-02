@@ -68,7 +68,8 @@ fun HomeScreen(
     onClickSeeAllRestaurant: () -> Unit = {},
     onClickCart: () -> Unit,
     onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
-    onClickRestaurant: (Restaurant) -> Unit = {}
+    onClickRestaurant: (Restaurant) -> Unit = {},
+    onClickToProfile: () -> Unit = {}
 ) {
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
     var selectedCategoryId by remember { mutableStateOf<Int?>(null) }
@@ -90,7 +91,8 @@ fun HomeScreen(
             item {
                 SectionHomeFirst(
                     numberFoodInCart = numberFoodInCart,
-                    onClickCart = onClickCart
+                    onClickCart = onClickCart,
+                    onClickToProfile = onClickToProfile
                 )
             }
             item {
@@ -160,7 +162,8 @@ fun HomeScreen(
 fun SectionHomeFirst(
     modifier: Modifier = Modifier,
     onClickCart: () -> Unit,
-    numberFoodInCart: Int
+    numberFoodInCart: Int,
+    onClickToProfile: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -180,7 +183,11 @@ fun SectionHomeFirst(
                         .size(48.dp)
                         .background(
                             color = grayCustomLight, shape = CircleShape
-                        ), contentAlignment = Alignment.Center
+                        )
+                        .clickable{
+                            onClickToProfile()
+                        },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Filled.Apps, "", tint = MaterialTheme.colorScheme.onSecondaryContainer

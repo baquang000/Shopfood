@@ -14,11 +14,13 @@ import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.home.CartScreen
 import com.example.shopfood.presentation.home.FoodDetailScreen
 import com.example.shopfood.presentation.home.HomeScreen
+import com.example.shopfood.presentation.home.ProfileScreen
 import com.example.shopfood.presentation.home.RestaurantDetailScreen
 import com.example.shopfood.presentation.home.SearchResultScreen
 import com.example.shopfood.presentation.home.SearchScreen
 import com.example.shopfood.presentation.home.SeeAllRestaurantScreen
 import com.example.shopfood.presentation.home.SeeAllScreen
+import com.example.shopfood.presentation.home.SuccessOrderScreen
 import com.example.shopfood.presentation.navigation.Graph
 import com.example.shopfood.presentation.navigation.Router
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
@@ -68,6 +70,9 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onClickCart = {
                     navController.navigate(Router.CartScreen.route)
+                },
+                onClickToProfile = {
+                    navController.navigate(Router.ProfileScreen.route)
                 }
             )
         }
@@ -212,7 +217,22 @@ fun NavGraphBuilder.mainNavGraph(
                 orderViewModel = orderViewModel,
                 onBackClick = {
                     navController.navigateUp()
+                },
+                onNavigateToSuccess = {
+                    navController.navigate(Router.SuccessOrderScreen.route)
                 }
+            )
+        }
+        composable(Router.SuccessOrderScreen.route) { backStackEntry ->
+            SuccessOrderScreen(
+                onBackClick = {
+                    navController.navigate(Router.HomeScreen.route)
+                }
+            )
+        }
+        composable(Router.ProfileScreen.route) { backStackEntry ->
+            ProfileScreen(
+
             )
         }
     }

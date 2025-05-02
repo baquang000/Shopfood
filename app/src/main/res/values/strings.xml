@@ -48,4 +48,18 @@
     <string name="edit">EDIT</string>
     <string name="total">TOTAL: </string>
     <string name="place_order">PLACE ORDER</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="congratulations_des">You successfully make a payment, enjoy our service</string>
+    <string name="go_home">GO HOME</string>
+    <string name="track_order">TRACK ORDER</string>
+    <string name="profile">Profile</string>
+    <string name="private_info_user">Person Info</string>
+    <string name="address">Addresses</string>
+    <string name="basket">Cart</string>
+    <string name="change_pass_user">Change pass</string>
+    <string name="logout">Logout</string>
+    <string name="confirm">Confirm</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="favourite">Favourite</string>
 </resources>
