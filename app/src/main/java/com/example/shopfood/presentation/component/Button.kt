@@ -56,10 +56,11 @@ fun ButtonCustom(
 
 @Composable
 fun ButtonWithIconAdd(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     ElevatedButton(
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         shape = CircleShape,
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = MaterialTheme.colorScheme.primary,

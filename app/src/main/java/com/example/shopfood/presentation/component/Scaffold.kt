@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.shopfood.ui.theme.ShopfoodTheme
@@ -60,11 +61,16 @@ fun SimpleTopBarWithBackIcon(
     title: String = "",
     backgroundIconColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
     backgroundColor: Color = MaterialTheme.colorScheme.onSecondary,
+    iconColor: Color = MaterialTheme.colorScheme.background,
+    textStyle: TextStyle = MaterialTheme.typography.labelMedium,
     onBackClick: () -> Unit
 ) {
     TopAppBar(
         title = {
-            Text(title)
+            Text(
+                title,
+                style = textStyle
+            )
         },
         navigationIcon = {
             Box(
@@ -79,7 +85,7 @@ fun SimpleTopBarWithBackIcon(
                 Icon(
                     imageVector = Icons.Filled.ArrowBackIosNew,
                     contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.background,
+                    tint = iconColor,
                     modifier = Modifier.size(20.dp)
                 )
             }

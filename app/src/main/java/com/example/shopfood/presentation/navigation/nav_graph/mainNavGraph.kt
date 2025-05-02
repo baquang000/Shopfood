@@ -1,7 +1,9 @@
 package com.example.shopfood.presentation.navigation.nav_graph
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -9,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
+import com.example.shopfood.presentation.home.CartScreen
 import com.example.shopfood.presentation.home.FoodDetailScreen
 import com.example.shopfood.presentation.home.HomeScreen
 import com.example.shopfood.presentation.home.RestaurantDetailScreen
@@ -19,7 +22,9 @@ import com.example.shopfood.presentation.home.SeeAllScreen
 import com.example.shopfood.presentation.navigation.Graph
 import com.example.shopfood.presentation.navigation.Router
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.mainNavGraph(
     navController: NavHostController,
@@ -28,11 +33,15 @@ fun NavGraphBuilder.mainNavGraph(
         startDestination = Router.HomeScreen.route,
         route = Graph.MAIN
     ) {
-
         composable(Router.HomeScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
             HomeScreen(
                 homeViewModel = homeViewModel,
+                orderViewModel = orderViewModel,
                 onClickSeeAll = {
                     navController.navigate(Router.SeeAllScreen.route)
                 },
@@ -56,12 +65,18 @@ fun NavGraphBuilder.mainNavGraph(
                         restaurant
                     )
                     navController.navigate(Router.RestaurantViewScreen.route)
+                },
+                onClickCart = {
+                    navController.navigate(Router.CartScreen.route)
                 }
             )
         }
 
         composable(Router.SearchScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             SearchScreen(
                 homeViewModel = homeViewModel,
                 onBackClick = {
@@ -73,12 +88,18 @@ fun NavGraphBuilder.mainNavGraph(
                         valueSearch
                     )
                     navController.navigate(Router.SearchResultScreen.route)
+                },
+                onClickCart = {
+                    navController.navigate(Router.CartScreen.route)
                 }
             )
         }
 
         composable(Router.SeeAllScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             SeeAllScreen(
                 homeViewModel = homeViewModel,
                 onBackClick = {
@@ -88,7 +109,10 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         composable(Router.SeeAllRestaurantScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             SeeAllRestaurantScreen(
                 homeViewModel = homeViewModel,
                 onBackClick = {
@@ -127,7 +151,10 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         composable(Router.RestaurantViewScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             val restaurant = navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.get<Restaurant>("restaurant")
@@ -150,7 +177,10 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         composable(Router.SearchResultScreen.route) { backStackEntry ->
-            val homeViewModel: HomeViewModel = hiltViewModel(backStackEntry)
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             val value = navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.get<String>("search_value")
@@ -167,6 +197,22 @@ fun NavGraphBuilder.mainNavGraph(
                 onBackClick = {
                     navController.navigateUp()
                 },
+                onClickCart = {
+                    navController.navigate(Router.CartScreen.route)
+                }
+            )
+        }
+
+        composable(Router.CartScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
+            CartScreen(
+                orderViewModel = orderViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                }
             )
         }
     }

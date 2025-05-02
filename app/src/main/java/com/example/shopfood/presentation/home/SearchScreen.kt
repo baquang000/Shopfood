@@ -48,6 +48,7 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 fun SearchScreen(
     homeViewModel: HomeViewModel,
     onBackClick: () -> Unit,
+    onClickCart: () -> Unit,
     onSearchClick: (String) -> Unit,
 ) {
     var valueSearch by remember { mutableStateOf("") }
@@ -66,7 +67,10 @@ fun SearchScreen(
                 title = "Search",
                 onBackClick = onBackClick,
                 secondIcon = {
-                    CardWithNumber()
+                    CardWithNumber(
+                        numberFoodInCart = 1,
+                        onClickCart = onClickCart
+                    )
                 }
             )
         },
@@ -242,7 +246,8 @@ fun ShowFoodWithBestFood(
             FoodSimpleCard(
                 food = foodWithRestaurant.food,
                 restaurantName = restaurant?.Name ?: "Unknown",
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2)
+                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2),
+                onClickAdd = {}
             )
         }
     }

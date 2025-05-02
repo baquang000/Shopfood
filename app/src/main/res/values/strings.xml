@@ -44,4 +44,8 @@
     <string name="size_14">14\"</string>
     <string name="size_16">16\"</string>
     <string name="ingredients">INGREDIENTS</string>
+    <string name="delivery_adr">DELIVERY ADDRESS</string>
+    <string name="edit">EDIT</string>
+    <string name="total">TOTAL: </string>
+    <string name="place_order">PLACE ORDER</string>
 </resources>

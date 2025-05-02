@@ -260,7 +260,8 @@ fun SectionFoodList(
                 FoodCard(
                     modifier = Modifier,
                     food = foodWithRestaurant,
-                    onClick = {}
+                    onClick = {},
+                    onClickAdd = {}
                 )
             }
         }

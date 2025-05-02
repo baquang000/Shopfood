@@ -54,6 +54,7 @@ import com.example.shopfood.presentation.component.TextCustom
 import com.example.shopfood.presentation.component.TextCustomInputText
 import com.example.shopfood.presentation.component.TextFieldCustomWithSearch
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 import com.example.shopfood.ui.theme.ShopfoodTheme
 import com.example.shopfood.ui.theme.grayCustomLight
 import com.example.shopfood.ui.theme.textColorGrayLight
@@ -61,9 +62,11 @@ import com.example.shopfood.ui.theme.textColorGrayLight
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
+    orderViewModel: OrderViewModel,
     onClickSeeAll: () -> Unit = {},
     onClickSearch: () -> Unit = {},
     onClickSeeAllRestaurant: () -> Unit = {},
+    onClickCart: () -> Unit,
     onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
     onClickRestaurant: (Restaurant) -> Unit = {}
 ) {
@@ -75,6 +78,8 @@ fun HomeScreen(
             ?.associateBy { it.Id }
             ?: emptyMap()
     }
+    val numberFoodInCart = orderViewModel.totalQuantity
+
     ScaffoldWithNoSafeArea { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -82,7 +87,12 @@ fun HomeScreen(
                 .background(color = MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 12.dp), contentPadding = PaddingValues(vertical = 12.dp)
         ) {
-            item { SectionHomeFirst() }
+            item {
+                SectionHomeFirst(
+                    numberFoodInCart = numberFoodInCart,
+                    onClickCart = onClickCart
+                )
+            }
             item {
                 TextFieldCustomWithSearch(
                     value = "",
@@ -124,7 +134,11 @@ fun HomeScreen(
                                 food = food,
                                 onClick = {
                                     onClickFood(food, restaurant)
-                                })
+                                },
+                                onClickAdd = {
+                                    orderViewModel.toggleSelectFood(food)
+                                }
+                            )
                         }
                     }
                 }
@@ -143,7 +157,11 @@ fun HomeScreen(
 }
 
 @Composable
-fun SectionHomeFirst(modifier: Modifier = Modifier) {
+fun SectionHomeFirst(
+    modifier: Modifier = Modifier,
+    onClickCart: () -> Unit,
+    numberFoodInCart: Int
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -196,7 +214,10 @@ fun SectionHomeFirst(modifier: Modifier = Modifier) {
                     }
                 }
             }
-            CardWithNumber()
+            CardWithNumber(
+                numberFoodInCart = numberFoodInCart,
+                onClickCart = onClickCart
+            )
         }
         Row(
             modifier = Modifier.padding(vertical = 8.dp)
@@ -318,7 +339,9 @@ fun SectionRestaurant(
 
 @Composable
 fun CardWithNumber(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickCart: () -> Unit,
+    numberFoodInCart: Int
 ) {
     Box(
         modifier = modifier
@@ -326,7 +349,11 @@ fun CardWithNumber(
             .size(48.dp)
             .background(
                 color = MaterialTheme.colorScheme.onSecondaryContainer, shape = CircleShape
-            ), contentAlignment = Alignment.Center
+            )
+            .clickable {
+                onClickCart()
+            },
+        contentAlignment = Alignment.Center
     ) {
         Icon(
             imageVector = Icons.Filled.ShoppingBag,
@@ -344,7 +371,7 @@ fun CardWithNumber(
                 ), contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "3",
+                text = numberFoodInCart.toString(),
                 color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold
             )
         }

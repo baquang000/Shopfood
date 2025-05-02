@@ -37,7 +37,8 @@ fun TextCustomInputText(
     text: String,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     color: Color = MaterialTheme.colorScheme.outline,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    maxLines: Int = 1,
 ) {
     Text(
         text = text,
@@ -47,7 +48,7 @@ fun TextCustomInputText(
             fontWeight = FontWeight.W600
         ),
         textAlign = textAlign,
-        maxLines = 1,
+        maxLines = maxLines,
         overflow = TextOverflow.Ellipsis
     )
 }

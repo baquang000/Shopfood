@@ -28,6 +28,7 @@ import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 @Composable
 fun SearchResultScreen(
     onBackClick: () -> Unit,
+    onClickCart : () -> Unit,
     valueSearch: String,
     homeViewModel: HomeViewModel
 ) {
@@ -48,7 +49,10 @@ fun SearchResultScreen(
                 title = "Search",
                 onBackClick = onBackClick,
                 secondIcon = {
-                    CardWithNumber()
+                    CardWithNumber(
+                        numberFoodInCart = 1,
+                        onClickCart = onClickCart
+                    )
                 }
             )
         },
@@ -82,7 +86,8 @@ fun SearchResultScreen(
                                 FoodCard(
                                     modifier = Modifier,
                                     food = foodWithRestaurant,
-                                    onClick = { /* handle click */ }
+                                    onClick = { /* handle click */ },
+                                    onClickAdd = {}
                                 )
                             }
                         }

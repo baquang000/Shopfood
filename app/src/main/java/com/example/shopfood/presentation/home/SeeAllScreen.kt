@@ -141,7 +141,8 @@ fun FoodGrid(
             FoodSimpleCard(
                 food = foodWithRestaurant.food,
                 restaurantName = restaurant?.Name ?: "Unknown",
-                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2)
+                modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2),
+                onClickAdd = {}
             )
         }
     }

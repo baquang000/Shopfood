@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +19,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -39,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.shopfood.R
 import com.example.shopfood.domain.model.Food
+import com.example.shopfood.domain.model.FoodInCard
 import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.home.Category
@@ -270,6 +276,7 @@ fun FoodSimpleCard(
     modifier: Modifier = Modifier,
     food: Food,
     restaurantName: String,
+    onClickAdd: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -332,7 +339,8 @@ fun FoodSimpleCard(
                 color = MaterialTheme.colorScheme.scrim,
             )
             ButtonWithIconAdd(
-                modifier = Modifier
+                modifier = Modifier,
+                onClick = onClickAdd
             )
         }
     }
@@ -342,7 +350,8 @@ fun FoodSimpleCard(
 fun FoodCard(
     modifier: Modifier = Modifier,
     food: FoodWithRestaurant,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onClickAdd: () -> Unit,
 ) {
     Card(
         shape = RoundedCornerShape(24.dp),
@@ -396,9 +405,149 @@ fun FoodCard(
                 color = MaterialTheme.colorScheme.scrim,
             )
             ButtonWithIconAdd(
-                modifier = Modifier
+                modifier = Modifier,
+                onClick = onClickAdd
             )
         }
+    }
+}
+
+@Composable
+fun FoodCardInCart(
+    modifier: Modifier = Modifier,
+    food: FoodInCard,
+    onClick: () -> Unit,
+    onClickAdd: () -> Unit,
+    onClickSub: () -> Unit,
+) {
+    Card(
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f)
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(120.dp)
+            .clickable {
+                onClick()
+            }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(180.dp)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(36.dp))
+                    .background(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = food.foodWithRestaurant.food.ImagePath,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(160.dp)
+                        .fillMaxHeight(),
+                    error = painterResource(id = R.drawable.error)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(vertical = 4.dp, horizontal = 12.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.Start
+            ) {
+                TextCustomInputText(
+                    text = food.foodWithRestaurant.food.Title,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                    ),
+                    color = MaterialTheme.colorScheme.surface,
+                    textAlign = TextAlign.Start,
+                    maxLines = 2
+                )
+                TextCustomInputText(
+                    text = "${food.foodWithRestaurant.food.Price * food.quantity} $",
+                    modifier = Modifier,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.W700,
+                    ),
+                    color = MaterialTheme.colorScheme.surface,
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ElevatedButton(
+                        onClick = onClickSub,
+                        shape = CircleShape,
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f),
+                            disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f),
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Remove,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                    TextCustomInputText(
+                        text = "${food.quantity}",
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                    ElevatedButton(
+                        onClick = onClickAdd,
+                        shape = CircleShape,
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f),
+                            disabledContainerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.3f),
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
+                            disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        contentPadding = PaddingValues(0.dp),
+                        modifier = modifier.size(36.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = "Add",
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+
+
+                }
+            }
+        }
+
     }
 }
 
