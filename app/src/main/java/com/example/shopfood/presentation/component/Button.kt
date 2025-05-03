@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.shopfood.ui.theme.backgroundTextField
 
 @Composable
 fun ButtonCustom(
@@ -77,5 +78,24 @@ fun ButtonWithIconAdd(
             modifier = Modifier.size(24.dp),
             tint = Color.White
         )
+    }
+}
+
+@Composable
+fun ButtonCustom(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primary else backgroundTextField,
+            contentColor = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.background
+        ),
+        shape = RoundedCornerShape(24.dp),
+        modifier = Modifier.padding(8.dp)
+    ) {
+        Text(text = text)
     }
 }

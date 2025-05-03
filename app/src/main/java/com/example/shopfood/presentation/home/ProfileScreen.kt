@@ -48,7 +48,8 @@ import com.example.shopfood.presentation.component.TextCustom
 @Composable
 fun ProfileScreen(
     onClickUserInfo: () -> Unit = {},
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onClickAddress : () -> Unit = {}
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -129,7 +130,9 @@ fun ProfileScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 12.dp)
                                 .heightIn(min = 60.dp)
-                                .clickable { },
+                                .clickable {
+                                    onClickAddress()
+                                },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {

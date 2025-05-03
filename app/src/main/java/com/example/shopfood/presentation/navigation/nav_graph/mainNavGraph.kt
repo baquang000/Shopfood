@@ -21,6 +21,8 @@ import com.example.shopfood.presentation.home.SearchScreen
 import com.example.shopfood.presentation.home.SeeAllRestaurantScreen
 import com.example.shopfood.presentation.home.SeeAllScreen
 import com.example.shopfood.presentation.home.SuccessOrderScreen
+import com.example.shopfood.presentation.home.profile.AddressScreen
+import com.example.shopfood.presentation.home.profile.EditAddressScreen
 import com.example.shopfood.presentation.home.profile.EditUserInfoScreen
 import com.example.shopfood.presentation.home.profile.UserInfoScreen
 import com.example.shopfood.presentation.navigation.Graph
@@ -240,6 +242,9 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onBackClick = {
                     navController.navigate(Router.HomeScreen.route)
+                },
+                onClickAddress = {
+                    navController.navigate(Router.AddressUserScreen.route)
                 }
             )
         }
@@ -266,6 +271,35 @@ fun NavGraphBuilder.mainNavGraph(
             }
             val userViewModel: UserViewModel = hiltViewModel(mainEntry)
             EditUserInfoScreen(
+                userViewModel = userViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(Router.AddressUserScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val userViewModel: UserViewModel = hiltViewModel(mainEntry)
+            AddressScreen(
+                userViewModel = userViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                },
+                onClickEdit = {
+                    navController.navigate(Router.EditAddressUserScreen.route)
+                }
+            )
+        }
+
+        composable(Router.EditAddressUserScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val userViewModel: UserViewModel = hiltViewModel(mainEntry)
+            EditAddressScreen(
                 userViewModel = userViewModel,
                 onBackClick = {
                     navController.navigateUp()

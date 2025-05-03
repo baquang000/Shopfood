@@ -19,6 +19,9 @@ import com.example.shopfood.domain.usecase.firebase.home.order.OrderUseCases
 import com.example.shopfood.domain.usecase.firebase.home.order.SaveOrderUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.GetAllRestaurantUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.RestaurantUseCases
+import com.example.shopfood.domain.usecase.firebase.home.user.AddAddressUseCase
+import com.example.shopfood.domain.usecase.firebase.home.user.DeleteAddress
+import com.example.shopfood.domain.usecase.firebase.home.user.GetAddressesUseCase
 import com.example.shopfood.domain.usecase.firebase.home.user.GetUserUseCase
 import com.example.shopfood.domain.usecase.firebase.home.user.UpdateUserUseCase
 import com.example.shopfood.domain.usecase.firebase.home.user.UserUseCases
@@ -108,6 +111,9 @@ object AppModule {
     fun provideUserUseCases(userRepository: UserRepository): UserUseCases =
         UserUseCases(
             getUser = GetUserUseCase(userRepository),
-            updateUser = UpdateUserUseCase(userRepository)
+            updateUser = UpdateUserUseCase(userRepository),
+            addAddress = AddAddressUseCase(userRepository),
+            getAddresses = GetAddressesUseCase(userRepository),
+            deleteAddress = DeleteAddress(userRepository),
         )
 }

@@ -69,4 +69,9 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="bio">BIO</string>
     <string name="save">Save</string>
+    <string name="my_address">My Address</string>
+    <string name="label_as">LABEL AS</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="other">Other</string>
 </resources>
