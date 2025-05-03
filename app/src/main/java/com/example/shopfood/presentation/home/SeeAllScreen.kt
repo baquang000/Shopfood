@@ -14,12 +14,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,15 +35,23 @@ import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.presentation.component.ButtonCustom
+import com.example.shopfood.presentation.component.CustomSnackBar
 import com.example.shopfood.presentation.component.FoodSimpleCard
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
 import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun SeeAllScreen(
     homeViewModel: HomeViewModel,
-    onBackClick : () -> Unit = {}
+    orderViewModel: OrderViewModel,
+    onBackClick: () -> Unit = {},
+    onClickCart: () -> Unit,
+    onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
+    onClickRestaurant: (Restaurant) -> Unit,
+    onClickSeeAllRestaurant: () -> Unit
 ) {
     val foodState by homeViewModel.foodState.collectAsStateWithLifecycle()
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
@@ -46,7 +60,17 @@ fun SeeAllScreen(
             ?: emptyMap()
     }
     val canLoadMore by homeViewModel.canLoadMore.collectAsStateWithLifecycle()
-
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(orderViewModel.totalQuantity) {
+        if (orderViewModel.totalQuantity > 0) {
+            coroutineScope.launch {
+                snackState.showSnackbar("", duration = SnackbarDuration.Indefinite)
+            }
+        } else {
+            snackState.currentSnackbarData?.dismiss()
+        }
+    }
     ScaffoldWithIconInTopBar(
         topBar = {
             SimpleTopBarWithBackIcon(
@@ -54,8 +78,23 @@ fun SeeAllScreen(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 backgroundIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 title = "See All",
+                textStyle = MaterialTheme.typography.titleLarge,
                 onBackClick = onBackClick
             )
+        },
+        snackBarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .background(color = Color.White),
+                hostState = snackState
+            ) {
+                CustomSnackBar(
+                    countFood = orderViewModel.totalQuantity,
+                    price = orderViewModel.totalPrice
+                ) {
+                    onClickCart()
+                }
+            }
         },
         content = { paddingValues ->
             LazyColumn(
@@ -69,7 +108,13 @@ fun SeeAllScreen(
                 item {
                     ShowFoodWithGrid(
                         foodState = foodState,
-                        restaurantMap = restaurantMap
+                        restaurantMap = restaurantMap,
+                        onClick = { food, restaurant ->
+                            onClickFood(food, restaurant)
+                        },
+                        onClickAdd = {
+                            orderViewModel.toggleSelectFood(it)
+                        }
                     )
                 }
                 if (canLoadMore) {
@@ -90,7 +135,11 @@ fun SeeAllScreen(
                 item {
                     SectionRestaurant(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp),
-                        restaurantState = restaurantState
+                        restaurantState = restaurantState,
+                        onClick = { restaurant ->
+                            onClickRestaurant(restaurant)
+                        },
+                        onClickSeeAllRestaurant = onClickSeeAllRestaurant
                     )
                 }
             }
@@ -101,11 +150,20 @@ fun SeeAllScreen(
 @Composable
 fun ShowFoodWithGrid(
     foodState: FoodState,
-    restaurantMap: Map<String, Restaurant>
+    restaurantMap: Map<String, Restaurant>,
+    onClick: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
+    onClickAdd: (FoodWithRestaurant) -> Unit = {}
 ) {
     when (foodState) {
         is FoodState.Success -> {
-            FoodGrid(foodState.foodList, restaurantMap)
+            FoodGrid(
+                foodState.foodList, restaurantMap,
+                onClick = { food, restaurant ->
+                    onClick(food, restaurant)
+                },
+                onClickAdd = {
+                    onClickAdd(it)
+                })
         }
 
         is FoodState.Loading -> {
@@ -127,6 +185,8 @@ fun ShowFoodWithGrid(
 fun FoodGrid(
     foods: List<FoodWithRestaurant>,
     restaurantMap: Map<String, Restaurant>,
+    onClick: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
+    onClickAdd: (FoodWithRestaurant) -> Unit = {}
 ) {
     FlowRow(
         modifier = Modifier
@@ -137,12 +197,17 @@ fun FoodGrid(
         maxItemsInEachRow = 2
     ) {
         foods.forEach { foodWithRestaurant ->
-            val restaurant = restaurantMap[foodWithRestaurant.restaurantId]
+            val restaurant = restaurantMap[foodWithRestaurant.restaurantId] ?: Restaurant()
             FoodSimpleCard(
                 food = foodWithRestaurant.food,
-                restaurantName = restaurant?.Name ?: "Unknown",
+                restaurantName = restaurant.Name,
                 modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 24.dp) / 2),
-                onClickAdd = {}
+                onClick = {
+                    onClick(foodWithRestaurant, restaurant)
+                },
+                onClickAdd = {
+                    onClickAdd(foodWithRestaurant)
+                }
             )
         }
     }

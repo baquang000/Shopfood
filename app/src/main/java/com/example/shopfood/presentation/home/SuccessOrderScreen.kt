@@ -24,7 +24,8 @@ import com.example.shopfood.presentation.component.TextCustom
 
 @Composable
 fun SuccessOrderScreen(
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onTrackOrderClick: () -> Unit
 ) {
     ScaffoldWithNoSafeArea {
         ScaffoldWithNoSafeArea {
@@ -84,7 +85,7 @@ fun SuccessOrderScreen(
                     ButtonCustom(
                         text = R.string.track_order,
                         modifier = Modifier.weight(1f),
-                        onClick = {}
+                        onClick = onTrackOrderClick
                     )
                 }
             }

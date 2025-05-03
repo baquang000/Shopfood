@@ -276,6 +276,7 @@ fun FoodSimpleCard(
     modifier: Modifier = Modifier,
     food: Food,
     restaurantName: String,
+    onClick: () -> Unit,
     onClickAdd: () -> Unit
 ) {
     Card(
@@ -287,7 +288,7 @@ fun FoodSimpleCard(
         modifier = modifier
             .width(160.dp)
             .height(240.dp)
-            .clickable { }
+            .clickable { onClick() }
     ) {
         AsyncImage(
             model = food.ImagePath,

@@ -31,11 +31,16 @@ import com.example.shopfood.ui.theme.ShopfoodTheme
 @Composable
 fun ScaffoldWithNoSafeArea(
     topBar: @Composable () -> Unit = {},
+    snackBarHost: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
+
 ) {
     Scaffold(
         topBar = topBar,
         contentWindowInsets = WindowInsets(0.dp),
+        snackbarHost = {
+            snackBarHost()
+        },
         content = content
     )
 }
@@ -44,10 +49,14 @@ fun ScaffoldWithNoSafeArea(
 fun ScaffoldWithIconInTopBar(
     content: @Composable (PaddingValues) -> Unit,
     topBar: @Composable () -> Unit,
+    snackBarHost: @Composable () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             topBar()
+        },
+        snackbarHost = {
+            snackBarHost()
         },
         contentWindowInsets = WindowInsets(0.dp),
         content = content

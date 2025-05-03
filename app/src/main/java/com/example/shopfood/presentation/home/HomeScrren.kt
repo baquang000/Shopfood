@@ -25,11 +25,16 @@ import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,17 +52,18 @@ import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.presentation.component.CategoryCard
+import com.example.shopfood.presentation.component.CustomSnackBar
 import com.example.shopfood.presentation.component.FoodCard
 import com.example.shopfood.presentation.component.RestaurantCard
 import com.example.shopfood.presentation.component.ScaffoldWithNoSafeArea
 import com.example.shopfood.presentation.component.TextCustom
-import com.example.shopfood.presentation.component.TextCustomInputText
 import com.example.shopfood.presentation.component.TextFieldCustomWithSearch
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 import com.example.shopfood.ui.theme.ShopfoodTheme
 import com.example.shopfood.ui.theme.grayCustomLight
 import com.example.shopfood.ui.theme.textColorGrayLight
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -65,7 +71,7 @@ fun HomeScreen(
     orderViewModel: OrderViewModel,
     onClickSeeAll: () -> Unit = {},
     onClickSearch: () -> Unit = {},
-    onClickSeeAllRestaurant: () -> Unit = {},
+    onClickSeeAllRestaurant: () -> Unit,
     onClickCart: () -> Unit,
     onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
     onClickRestaurant: (Restaurant) -> Unit = {},
@@ -80,8 +86,33 @@ fun HomeScreen(
             ?: emptyMap()
     }
     val numberFoodInCart = orderViewModel.totalQuantity
-
-    ScaffoldWithNoSafeArea { paddingValues ->
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(orderViewModel.totalQuantity) {
+        if (orderViewModel.totalQuantity > 0) {
+            coroutineScope.launch {
+                snackState.showSnackbar("", duration = SnackbarDuration.Indefinite)
+            }
+        } else {
+            snackState.currentSnackbarData?.dismiss()
+        }
+    }
+    ScaffoldWithNoSafeArea(
+        snackBarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .background(color = Color.White),
+                hostState = snackState
+            ) {
+                CustomSnackBar(
+                    countFood = orderViewModel.totalQuantity,
+                    price = orderViewModel.totalPrice
+                ) {
+                    onClickCart()
+                }
+            }
+        }
+    ) { paddingValues ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -151,12 +182,13 @@ fun HomeScreen(
                     onClickSeeAllRestaurant = onClickSeeAllRestaurant,
                     onClick = { restaurant ->
                         onClickRestaurant(restaurant)
-                    }
+                    },
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun SectionHomeFirst(
@@ -184,7 +216,7 @@ fun SectionHomeFirst(
                         .background(
                             color = grayCustomLight, shape = CircleShape
                         )
-                        .clickable{
+                        .clickable {
                             onClickToProfile()
                         },
                     contentAlignment = Alignment.Center
@@ -205,7 +237,7 @@ fun SectionHomeFirst(
                     )
                     Row {
                         Text(
-                            "40 Nguyễn Văn Linh, Quận 7, TP.HCM",
+                            "Your address",
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             ),
@@ -224,25 +256,6 @@ fun SectionHomeFirst(
             CardWithNumber(
                 numberFoodInCart = numberFoodInCart,
                 onClickCart = onClickCart
-            )
-        }
-        Row(
-            modifier = Modifier.padding(vertical = 8.dp)
-        ) {
-            TextCustomInputText(
-                text = "Hey Halal,",
-                color = textColorGrayLight,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Normal
-                ),
-            )
-            TextCustomInputText(
-                text = "Good Afternoon",
-                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier.padding(start = 2.dp)
             )
         }
     }

@@ -32,7 +32,8 @@ import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 @Composable
 fun SeeAllRestaurantScreen(
     homeViewModel: HomeViewModel,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onClickRestaurant: (Restaurant) -> Unit
 ) {
 
     val restaurantState by homeViewModel.restaurantState.collectAsStateWithLifecycle()
@@ -44,7 +45,8 @@ fun SeeAllRestaurantScreen(
                 backgroundColor = MaterialTheme.colorScheme.surface,
                 backgroundIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 title = "See All Restaurant",
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                textStyle = MaterialTheme.typography.titleLarge,
             )
         },
         content = { paddingValues ->
@@ -59,7 +61,10 @@ fun SeeAllRestaurantScreen(
                 item {
                     SetRestaurant(
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp),
-                        restaurantState = restaurantState
+                        restaurantState = restaurantState,
+                        onClick = { restaurant ->
+                            onClickRestaurant(restaurant)
+                        }
                     )
                 }
             }
@@ -68,7 +73,8 @@ fun SeeAllRestaurantScreen(
 }
 
 @Composable
-fun SetRestaurant(restaurantState: RestaurantState, modifier: Modifier = Modifier) {
+fun SetRestaurant(restaurantState: RestaurantState, modifier: Modifier = Modifier,
+                  onClick: (Restaurant) -> Unit = {}) {
     when (restaurantState) {
         is RestaurantState.Loading -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -78,7 +84,10 @@ fun SetRestaurant(restaurantState: RestaurantState, modifier: Modifier = Modifie
 
         is RestaurantState.Success -> {
             ListItemRestaurants(
-                modifier = modifier, restaurant = restaurantState.restaurantList
+                modifier = modifier, restaurant = restaurantState.restaurantList,
+                onClick = { restaurant ->
+                    onClick(restaurant)
+                }
             )
         }
 
@@ -106,7 +115,8 @@ fun SetRestaurant(restaurantState: RestaurantState, modifier: Modifier = Modifie
 
 @Composable
 fun ListItemRestaurants(
-    modifier: Modifier, restaurant: List<Restaurant>
+    modifier: Modifier, restaurant: List<Restaurant>,
+    onClick: (Restaurant) -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -115,7 +125,9 @@ fun ListItemRestaurants(
     ) {
         restaurant.forEach { item ->
             RestaurantCard(
-                restaurant = item, onClick = {})
+                restaurant = item, onClick = {
+                    onClick(item)
+                })
         }
     }
 }

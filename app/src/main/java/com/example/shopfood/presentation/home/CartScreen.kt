@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +36,7 @@ import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 fun CartScreen(
     orderViewModel: OrderViewModel,
     onBackClick: () -> Unit,
-    onNavigateToSuccess : () -> Unit
+    onNavigateToSuccess: () -> Unit
 ) {
     val foodInCart = orderViewModel.selectedFoods
     val totalPrice = orderViewModel.totalPrice
@@ -115,7 +114,7 @@ fun BottomBarWithCart(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .height(150.dp)
             .background(
                 color = MaterialTheme.colorScheme.background
             )
@@ -123,7 +122,7 @@ fun BottomBarWithCart(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .height(150.dp)
                 .clip(
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
@@ -134,42 +133,42 @@ fun BottomBarWithCart(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextCustom(
-                    text = R.string.delivery_adr,
-                    color = Color.Gray.copy(0.8f)
-                )
-                TextCustom(
-                    text = R.string.edit,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(start = 12.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.8f),
-                        shape = RoundedCornerShape(8.dp)
-                    ),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(
-                    "ADddres asdahsduhasuidasiud",
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        color = MaterialTheme.colorScheme.background
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp)
-                )
-            }
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth(),
+//                horizontalArrangement = Arrangement.SpaceBetween,
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                TextCustom(
+//                    text = R.string.delivery_adr,
+//                    color = Color.Gray.copy(0.8f)
+//                )
+//                TextCustom(
+//                    text = R.string.edit,
+//                    color = MaterialTheme.colorScheme.primary
+//                )
+//            }
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(56.dp)
+//                    .padding(start = 12.dp)
+//                    .background(
+//                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.8f),
+//                        shape = RoundedCornerShape(8.dp)
+//                    ),
+//                contentAlignment = Alignment.CenterStart
+//            ) {
+//                Text(
+//                    "ADddres asdahsduhasuidasiud",
+//                    style = MaterialTheme.typography.bodyLarge.copy(
+//                        color = MaterialTheme.colorScheme.background
+//                    ),
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(start = 8.dp)
+//                )
+//            }
 
             Row(
                 modifier = Modifier

@@ -2,7 +2,6 @@ package com.example.shopfood.presentation.navigation.nav_graph
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -89,8 +88,10 @@ fun NavGraphBuilder.mainNavGraph(
                 navController.getBackStackEntry(Graph.MAIN)
             }
             val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
             SearchScreen(
                 homeViewModel = homeViewModel,
+                orderViewModel = orderViewModel,
                 onBackClick = {
                     navController.navigateUp()
                 },
@@ -103,7 +104,23 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onClickCart = {
                     navController.navigate(Router.CartScreen.route)
-                }
+                },
+
+                onClickFood = { food, restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("food_detail", food)
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.FoodDetailScreen.route)
+                },
+                onClickRestaurant = { restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.RestaurantViewScreen.route)
+                },
             )
         }
 
@@ -112,11 +129,37 @@ fun NavGraphBuilder.mainNavGraph(
                 navController.getBackStackEntry(Graph.MAIN)
             }
             val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
             SeeAllScreen(
                 homeViewModel = homeViewModel,
+                orderViewModel = orderViewModel,
                 onBackClick = {
                     navController.navigateUp()
-                }
+                },
+                onClickCart = {
+                    navController.navigate(Router.CartScreen.route)
+                },
+                onClickFood = { food, restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "food_detail",
+                        food
+                    )
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.FoodDetailScreen.route)
+                },
+                onClickRestaurant = { restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.RestaurantViewScreen.route)
+                },
+                onClickSeeAllRestaurant = {
+                    navController.navigate(Router.SeeAllRestaurantScreen.route)
+                },
             )
         }
 
@@ -129,6 +172,13 @@ fun NavGraphBuilder.mainNavGraph(
                 homeViewModel = homeViewModel,
                 onBackClick = {
                     navController.navigateUp()
+                },
+                onClickRestaurant = {
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        it
+                    )
+                    navController.navigate(Router.RestaurantViewScreen.route)
                 }
             )
         }
@@ -142,16 +192,6 @@ fun NavGraphBuilder.mainNavGraph(
                 ?.savedStateHandle
                 ?.get<Restaurant>("restaurant")
 
-            DisposableEffect(Unit) {
-                onDispose {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<FoodWithRestaurant>("food_detail")
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<Restaurant>("restaurant")
-                }
-            }
             if (food != null && restaurant != null) {
                 FoodDetailScreen(
                     food = food,
@@ -167,22 +207,28 @@ fun NavGraphBuilder.mainNavGraph(
                 navController.getBackStackEntry(Graph.MAIN)
             }
             val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
             val restaurant = navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.get<Restaurant>("restaurant")
-            DisposableEffect(Unit) {
-                onDispose {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<Restaurant>("restaurant")
-                }
-            }
             if (restaurant != null) {
                 RestaurantDetailScreen(
                     homeViewModel = homeViewModel,
+                    orderViewModel = orderViewModel,
                     restaurant = restaurant,
                     onBackClick = {
                         navController.navigateUp()
+                    },
+                    onClickFood = { food, restaurant ->
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "food_detail",
+                            food
+                        )
+                        navController.currentBackStackEntry?.savedStateHandle?.set(
+                            "restaurant",
+                            restaurant
+                        )
+                        navController.navigate(Router.FoodDetailScreen.route)
                     }
                 )
             }
@@ -193,25 +239,32 @@ fun NavGraphBuilder.mainNavGraph(
                 navController.getBackStackEntry(Graph.MAIN)
             }
             val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
+            val orderViewModel: OrderViewModel = hiltViewModel(mainEntry)
             val value = navController.previousBackStackEntry
                 ?.savedStateHandle
                 ?.get<String>("search_value")
-            DisposableEffect(Unit) {
-                onDispose {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.remove<String>("search_value")
-                }
-            }
             SearchResultScreen(
                 homeViewModel = homeViewModel,
+                orderViewModel = orderViewModel,
                 valueSearch = value ?: "",
                 onBackClick = {
                     navController.navigateUp()
                 },
                 onClickCart = {
                     navController.navigate(Router.CartScreen.route)
-                }
+                },
+
+                onClickFood = { food, restaurant ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "food_detail",
+                        food
+                    )
+                    navController.currentBackStackEntry?.savedStateHandle?.set(
+                        "restaurant",
+                        restaurant
+                    )
+                    navController.navigate(Router.FoodDetailScreen.route)
+                },
             )
         }
 
@@ -234,6 +287,9 @@ fun NavGraphBuilder.mainNavGraph(
             SuccessOrderScreen(
                 onBackClick = {
                     navController.navigate(Router.HomeScreen.route)
+                },
+                onTrackOrderClick = {
+                    navController.navigate(Router.MyOrderScreen.route)
                 }
             )
         }

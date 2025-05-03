@@ -55,6 +55,7 @@ fun FoodDetailScreen(
             SimpleTopBarWithBackIcon(
                 backgroundIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                 title = "Detail",
+                textStyle = MaterialTheme.typography.titleLarge,
                 onBackClick = onBackClick
             )
         },

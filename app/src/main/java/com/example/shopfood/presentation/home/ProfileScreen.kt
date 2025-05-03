@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,10 +19,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.AddHome
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material.icons.filled.Output
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PunchClock
+import androidx.compose.material.icons.filled.QueuePlayNext
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
+import androidx.compose.material.icons.filled.Wallet
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -43,14 +48,13 @@ import androidx.compose.ui.unit.dp
 import com.example.shopfood.R
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
 import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
-import com.example.shopfood.presentation.component.TextCustom
 
 @Composable
 fun ProfileScreen(
     onClickUserInfo: () -> Unit = {},
     onBackClick: () -> Unit = {},
-    onClickAddress : () -> Unit = {},
-    onClickOrder : () -> Unit = {}
+    onClickAddress: () -> Unit = {},
+    onClickOrder: () -> Unit = {}
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -61,7 +65,7 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 title = stringResource(R.string.profile),
                 onBackClick = onBackClick,
-                textStyle = MaterialTheme.typography.headlineSmall.copy(
+                textStyle = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.background
                 ),
                 iconColor = MaterialTheme.colorScheme.background,
@@ -86,86 +90,84 @@ fun ProfileScreen(
                         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.4f)
                     )
                 ) {
-                    Column {
-                        Row(
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable { onClickUserInfo() },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                                .heightIn(min = 60.dp)
-                                .clickable { onClickUserInfo() },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(shape = CircleShape)
-                                    .background(color = MaterialTheme.colorScheme.surface),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Person,
-                                    contentDescription = null,
-                                    tint = Color.Red
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.private_info_user),
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.background
-                                )
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                imageVector = Icons.Filled.Person,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.background,
-                                modifier = Modifier.size(36.dp)
+                                tint = Color.Red
                             )
                         }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                                .heightIn(min = 60.dp)
-                                .clickable {
-                                    onClickAddress()
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(shape = CircleShape)
-                                    .background(color = MaterialTheme.colorScheme.surface),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.AddHome,
-                                    contentDescription = null,
-                                    tint = Color.Blue
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.address),
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.background
-                                )
+                        Text(
+                            text = stringResource(R.string.private_info_user),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
                             )
-                            Spacer(modifier = Modifier.weight(1f))
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
 
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable {
+                                onClickAddress()
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                imageVector = Icons.Filled.AddHome,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.background,
-                                modifier = Modifier.size(36.dp)
+                                tint = Color.Blue
                             )
                         }
+                        Text(
+                            text = stringResource(R.string.address),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
                 }
 
@@ -176,149 +178,341 @@ fun ProfileScreen(
                         containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.4f)
                     )
                 ) {
-                    Column {
-                        Row(
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable {
+                                onClickOrder()
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                                .heightIn(min = 60.dp)
-                                .clickable {
-                                    onClickOrder()
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(shape = CircleShape)
-                                    .background(color = MaterialTheme.colorScheme.surface),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ShoppingCartCheckout,
-                                    contentDescription = null,
-                                    tint = Color.Red
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.order),
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.background
-                                )
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                imageVector = Icons.Filled.ShoppingCartCheckout,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.background,
-                                modifier = Modifier.size(36.dp)
+                                tint = Color.Red
                             )
                         }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                                .heightIn(min = 60.dp)
-                                .clickable { },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(shape = CircleShape)
-                                    .background(color = MaterialTheme.colorScheme.surface),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.FavoriteBorder,
-                                    contentDescription = null,
-                                    tint = Color.Blue
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.favourite),
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.background
-                                )
+                        Text(
+                            text = stringResource(R.string.order),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
                             )
-                            Spacer(modifier = Modifier.weight(1f))
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
 
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable { },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                imageVector = Icons.Filled.FavoriteBorder,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.background,
-                                modifier = Modifier.size(36.dp)
+                                tint = Color.Blue
                             )
                         }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp, horizontal = 12.dp)
-                                .heightIn(min = 60.dp)
-                                .clickable { },
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(shape = CircleShape)
-                                    .background(color = MaterialTheme.colorScheme.surface),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.PunchClock,
-                                    contentDescription = null,
-                                    tint = Color.Blue
-                                )
-                            }
-                            Text(
-                                text = stringResource(R.string.change_pass_user),
-                                modifier = Modifier.padding(start = 8.dp),
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    color = MaterialTheme.colorScheme.background
-                                )
+                        Text(
+                            text = stringResource(R.string.favourite),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
                             )
-                            Spacer(modifier = Modifier.weight(1f))
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
 
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable { },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                                imageVector = Icons.Filled.PunchClock,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.background,
-                                modifier = Modifier.size(36.dp)
+                                tint = Color.Blue
                             )
                         }
+                        Text(
+                            text = stringResource(R.string.change_pass_user),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable {
+
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Wallet,
+                                contentDescription = null,
+                                tint = Color.Red
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.Payment_method),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 50.dp)
-                        .clickable {
-                            openDialog = true
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.4f)
+                    )
                 ) {
-                    Icon(
-                        imageVector = Icons.Filled.Output,
-                        contentDescription = null,
-                        modifier = Modifier.padding(start = 12.dp)
-                    )
-                    Text(
-                        text = stringResource(R.string.logout),
-                        modifier = Modifier.padding(start = 8.dp),
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable {
+
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.HelpOutline,
+                                contentDescription = null,
+                                tint = Color.Red
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.FAQs),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable { },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.QueuePlayNext,
+                                contentDescription = null,
+                                tint = Color.Blue
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.favourite),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable { },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = null,
+                                tint = Color.Blue
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.user_review),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
                 }
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.4f)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp, horizontal = 12.dp)
+                            .heightIn(min = 60.dp)
+                            .clickable {
+                                openDialog = true
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(shape = CircleShape)
+                                .background(color = MaterialTheme.colorScheme.surface),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Output,
+                                contentDescription = null,
+                                tint = Color.Blue
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.logout),
+                            modifier = Modifier.padding(start = 8.dp),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowRight,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.background,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+
             }
         }
     )
@@ -327,30 +521,46 @@ fun ProfileScreen(
         AlertDialog(
             onDismissRequest = { openDialog = false },
             title = {
-                TextCustom(
-                    text = R.string.confirm,
+                Text(
+                    text = stringResource(R.string.confirm),
+                    style = MaterialTheme.typography.titleLarge
                 )
             },
             text = {
-                Text(text = "Bạn có muốn đăng xuất không?")
-            },
-            confirmButton = {
-                Button(onClick = {
-                    openDialog = false
-                }) {
-                    TextCustom(
-                        text = R.string.yes,
+                Column {
+                    Text(
+                        text = stringResource(R.string.confirm_message_logout),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.background
+                        )
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = { openDialog = false },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.cancel))
+                        }
+
+                        Button(
+                            onClick = {
+                                // Handle confirm action
+                                openDialog = false
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.yes))
+                        }
+                    }
                 }
             },
-            dismissButton = {
-                Button(onClick = {
-                    openDialog = false
-                }) {
-                    TextCustom(
-                        text = R.string.cancel,
-                    )
-                }
-            })
+            confirmButton = {}, // Bỏ trống
+            dismissButton = {}
+        )
     }
+
 }

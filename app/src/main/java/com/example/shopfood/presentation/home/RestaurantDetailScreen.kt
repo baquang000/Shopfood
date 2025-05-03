@@ -24,6 +24,9 @@ import androidx.compose.material.icons.filled.DeliveryDining
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,20 +49,25 @@ import com.example.shopfood.domain.model.FoodState
 import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.Restaurant
 import com.example.shopfood.presentation.component.CategorySimpleCard
+import com.example.shopfood.presentation.component.CustomSnackBar
 import com.example.shopfood.presentation.component.FoodCard
 import com.example.shopfood.presentation.component.IconWithText
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
 import com.example.shopfood.presentation.component.TextCustomInputText
 import com.example.shopfood.presentation.component.TopBarWithTextAndTwoIcons
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun RestaurantDetailScreen(
     homeViewModel: HomeViewModel,
+    orderViewModel: OrderViewModel,
     restaurant: Restaurant,
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    onClickCart: () -> Unit = {},
+    onClickFood: (FoodWithRestaurant, Restaurant) -> Unit = { _, _ -> },
 ) {
-
     val initialCategory =
         remember(restaurant) {
             CategoryList.firstOrNull { it.id != 7 } ?: CategoryList.first()
@@ -67,13 +76,23 @@ fun RestaurantDetailScreen(
     val filteredFoods = homeViewModel.filteredFoods
 
     val foodState by homeViewModel.foodState.collectAsState()
-
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(selectedCategory, restaurant, foodState) {
         if (foodState is FoodState.Success) {
             homeViewModel.filterFoodsByRestaurantAndCategory(
                 restaurantId = restaurant.Id,
                 categoryId = selectedCategory.id
             )
+        }
+    }
+    LaunchedEffect(orderViewModel.totalQuantity) {
+        if (orderViewModel.totalQuantity > 0) {
+            coroutineScope.launch {
+                snackState.showSnackbar("", duration = SnackbarDuration.Indefinite)
+            }
+        } else {
+            snackState.currentSnackbarData?.dismiss()
         }
     }
 
@@ -104,6 +123,21 @@ fun RestaurantDetailScreen(
                 }
             )
         },
+        snackBarHost = {
+            SnackbarHost(
+                modifier = Modifier
+                    .background(color = Color.White),
+                hostState = snackState
+            ) {
+                CustomSnackBar(
+                    countFood = orderViewModel.totalQuantity,
+                    price = orderViewModel.totalPrice
+                ) {
+                    onClickCart()
+                }
+            }
+
+        },
         content = { paddingValues ->
             LazyColumn(
                 modifier = Modifier
@@ -112,7 +146,7 @@ fun RestaurantDetailScreen(
                     .background(
                         color = MaterialTheme.colorScheme.surface
                     )
-                    .padding(vertical = 12.dp, horizontal = 24.dp)
+                    .padding(vertical = 12.dp, horizontal = 12.dp)
             ) {
                 item {
                     AsyncImage(
@@ -164,7 +198,13 @@ fun RestaurantDetailScreen(
 //                    }
                     SectionFoodList(
                         category = selectedCategory,
-                        foods = filteredFoods
+                        foods = filteredFoods,
+                        onClick = { food ->
+                            onClickFood(food, restaurant)
+                        },
+                        onClickAdd = {
+                            orderViewModel.toggleSelectFood(it)
+                        }
                     )
                 }
 
@@ -225,7 +265,9 @@ fun SectionBodyRestaurantDetail(
 fun SectionFoodList(
     modifier: Modifier = Modifier,
     category: Category,
-    foods: List<FoodWithRestaurant>
+    foods: List<FoodWithRestaurant>,
+    onClick: (FoodWithRestaurant) -> Unit = {},
+    onClickAdd: (FoodWithRestaurant) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -260,8 +302,12 @@ fun SectionFoodList(
                 FoodCard(
                     modifier = Modifier,
                     food = foodWithRestaurant,
-                    onClick = {},
-                    onClickAdd = {}
+                    onClick = {
+                        onClick(foodWithRestaurant)
+                    },
+                    onClickAdd = {
+                        onClickAdd(foodWithRestaurant)
+                    }
                 )
             }
         }
