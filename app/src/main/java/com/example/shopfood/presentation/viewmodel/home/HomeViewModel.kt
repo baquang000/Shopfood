@@ -1,5 +1,6 @@
 package com.example.shopfood.presentation.viewmodel.home
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,8 @@ import com.example.shopfood.domain.model.FoodWithRestaurant
 import com.example.shopfood.domain.model.RestaurantState
 import com.example.shopfood.domain.usecase.firebase.home.food.FoodUseCases
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.RestaurantUseCases
+import com.example.shopfood.until.RememberMePreference.setRememberMe
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val restaurantUseCases: RestaurantUseCases,
-    private val foodUseCases: FoodUseCases
+    private val foodUseCases: FoodUseCases,
+    private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _restaurantState = MutableStateFlow<RestaurantState>(RestaurantState.Empty)
     val restaurantState: StateFlow<RestaurantState> = _restaurantState
@@ -130,4 +134,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun logout(context: Context) {
+        auth.signOut()
+        setRememberMe(context, false)
+    }
 }

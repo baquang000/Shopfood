@@ -43,19 +43,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.shopfood.R
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
 import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
+import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
 
 @Composable
 fun ProfileScreen(
+    homeViewModel: HomeViewModel,
     onClickUserInfo: () -> Unit = {},
     onBackClick: () -> Unit = {},
     onClickAddress: () -> Unit = {},
-    onClickOrder: () -> Unit = {}
+    onClickOrder: () -> Unit = {},
+    onClickLogout: () -> Unit,
 ) {
+    val context = LocalContext.current
     var openDialog by remember {
         mutableStateOf(false)
     }
@@ -409,7 +414,7 @@ fun ProfileScreen(
                             )
                         }
                         Text(
-                            text = stringResource(R.string.favourite),
+                            text = stringResource(R.string.user_review),
                             modifier = Modifier.padding(start = 8.dp),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.background
@@ -448,7 +453,7 @@ fun ProfileScreen(
                             )
                         }
                         Text(
-                            text = stringResource(R.string.user_review),
+                            text = stringResource(R.string.setting),
                             modifier = Modifier.padding(start = 8.dp),
                             style = MaterialTheme.typography.titleMedium.copy(
                                 color = MaterialTheme.colorScheme.background
@@ -548,8 +553,9 @@ fun ProfileScreen(
 
                         Button(
                             onClick = {
-                                // Handle confirm action
+                                homeViewModel.logout(context)
                                 openDialog = false
+                                onClickLogout()
                             },
                             modifier = Modifier.weight(1f)
                         ) {

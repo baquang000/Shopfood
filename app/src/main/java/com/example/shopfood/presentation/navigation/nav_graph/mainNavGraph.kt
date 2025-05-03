@@ -294,7 +294,12 @@ fun NavGraphBuilder.mainNavGraph(
             )
         }
         composable(Router.ProfileScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val homeViewModel: HomeViewModel = hiltViewModel(mainEntry)
             ProfileScreen(
+                homeViewModel = homeViewModel,
                 onClickUserInfo = {
                     navController.navigate(Router.UserInfoScreen.route)
                 },
@@ -306,6 +311,13 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onClickOrder = {
                     navController.navigate(Router.MyOrderScreen.route)
+                },
+                onClickLogout = {
+                    navController.navigate(Router.LoginScreen.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
