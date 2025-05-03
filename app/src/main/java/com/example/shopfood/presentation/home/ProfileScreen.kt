@@ -49,7 +49,8 @@ import com.example.shopfood.presentation.component.TextCustom
 fun ProfileScreen(
     onClickUserInfo: () -> Unit = {},
     onBackClick: () -> Unit = {},
-    onClickAddress : () -> Unit = {}
+    onClickAddress : () -> Unit = {},
+    onClickOrder : () -> Unit = {}
 ) {
     var openDialog by remember {
         mutableStateOf(false)
@@ -181,7 +182,9 @@ fun ProfileScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp, horizontal = 12.dp)
                                 .heightIn(min = 60.dp)
-                                .clickable { },
+                                .clickable {
+                                    onClickOrder()
+                                },
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {
@@ -199,7 +202,7 @@ fun ProfileScreen(
                                 )
                             }
                             Text(
-                                text = stringResource(R.string.basket),
+                                text = stringResource(R.string.order),
                                 modifier = Modifier.padding(start = 8.dp),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     color = MaterialTheme.colorScheme.background

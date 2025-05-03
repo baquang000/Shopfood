@@ -15,8 +15,10 @@ import com.example.shopfood.domain.usecase.firebase.auth.LoginUseCase
 import com.example.shopfood.domain.usecase.firebase.auth.SignupUseCase
 import com.example.shopfood.domain.usecase.firebase.home.food.FoodUseCases
 import com.example.shopfood.domain.usecase.firebase.home.food.GetAllFoodUseCase
+import com.example.shopfood.domain.usecase.firebase.home.order.GetOrdersByUserIdUseCase
 import com.example.shopfood.domain.usecase.firebase.home.order.OrderUseCases
 import com.example.shopfood.domain.usecase.firebase.home.order.SaveOrderUseCase
+import com.example.shopfood.domain.usecase.firebase.home.order.UpdateOrderStatusUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.GetAllRestaurantUseCase
 import com.example.shopfood.domain.usecase.firebase.home.restaurant.RestaurantUseCases
 import com.example.shopfood.domain.usecase.firebase.home.user.AddAddressUseCase
@@ -102,7 +104,9 @@ object AppModule {
     @Singleton
     fun provideOrderUseCases(orderRepository: OrderRepository): OrderUseCases {
         return OrderUseCases(
-            saveOrder = SaveOrderUseCase(orderRepository)
+            saveOrder = SaveOrderUseCase(orderRepository),
+            getOrdersByUserId = GetOrdersByUserIdUseCase(orderRepository),
+            updateOrderStatus = UpdateOrderStatusUseCase(orderRepository)
         )
     }
 

@@ -24,4 +24,5 @@ sealed class Router(val route: String) {
     data object EditUserInfoScreen : Router("edit_user_info_screen")
     data object AddressUserScreen : Router("address_user_screen")
     data object EditAddressUserScreen : Router("edit_address_user_screen")
+    data object MyOrderScreen : Router("my_order_screen")
 }

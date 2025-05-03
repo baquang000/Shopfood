@@ -81,7 +81,8 @@ class OrderViewModel @Inject constructor(
             userId = userId,
             items = selectedFoods,
             totalPrice = totalPrice,
-            timestamp = System.currentTimeMillis()
+            timestamp = System.currentTimeMillis(),
+            status = "Ongoing"
         )
 
 

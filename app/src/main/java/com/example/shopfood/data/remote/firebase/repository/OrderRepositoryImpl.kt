@@ -1,6 +1,8 @@
 package com.example.shopfood.data.remote.firebase.repository
 
+import android.util.Log
 import com.example.shopfood.domain.model.Order
+import com.example.shopfood.domain.model.OrderWithFirebase
 import com.example.shopfood.domain.repository.firebase.OrderRepository
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
@@ -22,4 +24,44 @@ class OrderRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun getOrdersByUserId(userId: String): Result<List<OrderWithFirebase>> =
+        withContext(Dispatchers.IO) {
+            try {
+                val snapshot = database.getReference("orders")
+                    .orderByChild("userId")
+                    .equalTo(userId)
+                    .get()
+                    .await()
+                Log.d("FirebaseDebug", "Snapshot: ${snapshot.value}")
+                val orders = snapshot.children.mapNotNull { child ->
+                    try {
+                        val order = child.getValue(OrderWithFirebase::class.java)
+                        if (order != null) {
+                            order.copy(id = child.key ?: "")
+                        } else null
+                    } catch (e: Exception) {
+                        Log.e("FirebaseDebug", "Parse error: ${e.message}")
+                        null
+                    }
+                }
+                Log.d("FirebaseDebug", "order: $orders")
+                Result.success(orders)
+            } catch (e: Exception) {
+                Log.e("FirebaseOrders", "Error: ${e.message}")
+                Result.failure(e)
+            }
+        }
+
+    override suspend fun updateOrderStatus(orderId: String, status: String): Result<Unit> =
+        withContext(Dispatchers.IO) {
+            try {
+                val orderRef = database.getReference("orders").child(orderId)
+                orderRef.child("status").setValue(status).await()
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
 }

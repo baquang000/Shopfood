@@ -24,10 +24,12 @@ import com.example.shopfood.presentation.home.SuccessOrderScreen
 import com.example.shopfood.presentation.home.profile.AddressScreen
 import com.example.shopfood.presentation.home.profile.EditAddressScreen
 import com.example.shopfood.presentation.home.profile.EditUserInfoScreen
+import com.example.shopfood.presentation.home.profile.OrderScreen
 import com.example.shopfood.presentation.home.profile.UserInfoScreen
 import com.example.shopfood.presentation.navigation.Graph
 import com.example.shopfood.presentation.navigation.Router
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.presentation.viewmodel.home.OrderHistoryViewModel
 import com.example.shopfood.presentation.viewmodel.home.OrderViewModel
 import com.example.shopfood.presentation.viewmodel.home.UserViewModel
 
@@ -245,6 +247,9 @@ fun NavGraphBuilder.mainNavGraph(
                 },
                 onClickAddress = {
                     navController.navigate(Router.AddressUserScreen.route)
+                },
+                onClickOrder = {
+                    navController.navigate(Router.MyOrderScreen.route)
                 }
             )
         }
@@ -301,6 +306,19 @@ fun NavGraphBuilder.mainNavGraph(
             val userViewModel: UserViewModel = hiltViewModel(mainEntry)
             EditAddressScreen(
                 userViewModel = userViewModel,
+                onBackClick = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(Router.MyOrderScreen.route) { backStackEntry ->
+            val mainEntry = remember(navController) {
+                navController.getBackStackEntry(Graph.MAIN)
+            }
+            val orderHistoryViewModel: OrderHistoryViewModel = hiltViewModel(mainEntry)
+            OrderScreen(
+                orderHistoryViewModel = orderHistoryViewModel,
                 onBackClick = {
                     navController.navigateUp()
                 }
