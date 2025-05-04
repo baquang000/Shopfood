@@ -381,10 +381,7 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         composable(Router.MyOrderScreen.route) { backStackEntry ->
-            val mainEntry = remember(navController) {
-                navController.getBackStackEntry(Graph.MAIN)
-            }
-            val orderHistoryViewModel: OrderHistoryViewModel = hiltViewModel(mainEntry)
+            val orderHistoryViewModel: OrderHistoryViewModel = hiltViewModel()
             OrderScreen(
                 orderHistoryViewModel = orderHistoryViewModel,
                 onBackClick = {

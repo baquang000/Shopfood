@@ -319,7 +319,7 @@ fun HistoryOrder(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 12.dp, end = 12.dp),
+                        .padding(bottom = 12.dp, end = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -342,8 +342,8 @@ fun HistoryOrder(
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Normal
                         ),
+                        modifier = Modifier.padding(end = 4.dp)
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     TextCustomInputText(
                         text = order.status,
                         style = MaterialTheme.typography.titleMedium.copy(

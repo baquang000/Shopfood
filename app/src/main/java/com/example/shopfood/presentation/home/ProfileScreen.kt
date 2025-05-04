@@ -50,6 +50,8 @@ import com.example.shopfood.R
 import com.example.shopfood.presentation.component.ScaffoldWithIconInTopBar
 import com.example.shopfood.presentation.component.SimpleTopBarWithBackIcon
 import com.example.shopfood.presentation.viewmodel.home.HomeViewModel
+import com.example.shopfood.ui.theme.colorBlue1
+import com.example.shopfood.ui.theme.colorMa
 
 @Composable
 fun ProfileScreen(
@@ -114,7 +116,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.Person,
                                 contentDescription = null,
-                                tint = Color.Red
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                         Text(
@@ -155,7 +157,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.AddHome,
                                 contentDescription = null,
-                                tint = Color.Blue
+                                tint = colorMa
                             )
                         }
                         Text(
@@ -204,7 +206,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.ShoppingCartCheckout,
                                 contentDescription = null,
-                                tint = Color.Red
+                                tint = colorBlue1
                             )
                         }
                         Text(
@@ -243,7 +245,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.FavoriteBorder,
                                 contentDescription = null,
-                                tint = Color.Blue
+                                tint = colorMa
                             )
                         }
                         Text(
@@ -282,7 +284,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.PunchClock,
                                 contentDescription = null,
-                                tint = Color.Blue
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                         Text(
@@ -322,7 +324,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.Wallet,
                                 contentDescription = null,
-                                tint = Color.Red
+                                tint = colorBlue1
                             )
                         }
                         Text(
@@ -449,7 +451,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.Settings,
                                 contentDescription = null,
-                                tint = Color.Blue
+                                tint = Color.Black
                             )
                         }
                         Text(
@@ -497,7 +499,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Filled.Output,
                                 contentDescription = null,
-                                tint = Color.Blue
+                                tint = Color.Red
                             )
                         }
                         Text(

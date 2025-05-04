@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -73,15 +74,15 @@ fun ContentSnackBarInShop(
     price: Int,
     onAction: () -> Unit
 ) {
-
     Row(
         modifier = Modifier.wrapContentHeight(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "$ $price", fontSize = 12.sp,
+            text = "$ $price", fontSize = 14.sp,
             style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.Bold
             )
         )
         Spacer(modifier = Modifier.width(6.dp))
